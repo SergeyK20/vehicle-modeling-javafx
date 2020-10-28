@@ -4,30 +4,35 @@ import javafx.animation.Animation;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import main.java.model.Transport;
-import main.java.view.GenericScene;
+import main.java.view.GenericSceneTunnel;
 
 import java.util.Map;
 
 public class ControllerPause implements EventHandler<ActionEvent> {
 
-    private Map<String, Transport> list;
+    private Map<String, Transport>[] listListsAutoInRoad;
     private Boolean newTimes;
-    private GenericScene genericScene;
+    private GenericSceneTunnel genericSceneTunnel;
 
-    public ControllerPause(Map<String, Transport> list, GenericScene genericScene) {
-        this.list = list;
-        this.genericScene = genericScene;
+    @SafeVarargs
+    public ControllerPause(GenericSceneTunnel genericSceneTunnel, Map<String, Transport>... listListsAutoInRoad) {
+        this.listListsAutoInRoad = listListsAutoInRoad;
+        this.genericSceneTunnel = genericSceneTunnel;
     }
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        if (!list.isEmpty()) {
-            for (Transport transport : list.values()) {
-                if(transport.getAnimation().getStatus() == Animation.Status.RUNNING) {
-                    transport.getAnimation().pause();
+        int i = 0;
+        genericSceneTunnel.initNewTimeSec();
+        while (i < listListsAutoInRoad.length) {
+            if (!listListsAutoInRoad[i].isEmpty()) {
+                for (Transport transport : listListsAutoInRoad[i].values()) {
+                    if (transport.getAnimation().getStatus() == Animation.Status.RUNNING) {
+                        transport.getAnimation().pause();
+                    }
                 }
             }
-            genericScene.initNewTimeSec();
+            i++;
         }
     }
 

@@ -5,19 +5,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
 import main.java.model.Transport;
-import main.java.view.GenericScene;
+import main.java.view.GenericSceneTunnel;
 
 import java.util.concurrent.ConcurrentMap;
 
 public class ControllerObjectSelection implements EventHandler<MouseEvent> {
 
-    private GenericScene genericScene;
+    private GenericSceneTunnel genericSceneTunnel;
 
     private ConcurrentMap<String, Transport> list;
 
-    public ControllerObjectSelection(ConcurrentMap<String, Transport> list, GenericScene genericScene){
+    public ControllerObjectSelection(ConcurrentMap<String, Transport> list, GenericSceneTunnel genericSceneTunnel){
         this.list = list;
-        this.genericScene = genericScene;
+        this.genericSceneTunnel = genericSceneTunnel;
     }
 
     @Override
@@ -32,6 +32,6 @@ public class ControllerObjectSelection implements EventHandler<MouseEvent> {
         Transport transport = (Transport) mouseEvent.getTarget();
         transport.setStroke(Color.MAGENTA);
         transport.setStrokeType(StrokeType.OUTSIDE);
-        genericScene.initButtonEvent(transport);
+        genericSceneTunnel.initButtonEvent(transport);
     }
 }

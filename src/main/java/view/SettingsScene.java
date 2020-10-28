@@ -1,11 +1,11 @@
 package main.java.view;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import main.java.controller.ControllerSettingsSimulation;
 import main.java.model.BuilderRoad;
@@ -32,26 +32,51 @@ public class SettingsScene {
 
         Scene sceneSettings = new Scene(paneSettings, 800, 600);
         paneSettings.getChildren().addAll(startSimulation);
+        ObservableList<String> list = FXCollections.observableArrayList("Детерменированное", "Нормальное", "Равномерное", "Экспоненциальное");
+        ComboBox<String> comboBox = new ComboBox<>(list);
+        Label label = new Label();
+        label.setLayoutX(300);
+        label.setLayoutY(50);
+        comboBox.setLayoutX(300);
+        comboBox.setLayoutY(100);
+        comboBox.setValue("Детерменированное");
         if (road instanceof Tunnel) {
-            discrete(paneSettings);
+            discreteTunnel(paneSettings);
+        } else {
+            paneSettings.getChildren().addAll(label, comboBox);
+            comboBox.setOnAction(event -> {
+                switch (comboBox.getValue()) {
+                    case "Детерменированное":
+                        label.setText("Детерменированное");
+                        break;
+                    case "Нормальное":
+                        label.setText("Нормальное");
+                        break;
+                    case "Равномерное":
+                        label.setText("Равномерное");
+                        break;
+                    case "Экспоненциальное":
+                        label.setText("Экспоненциальное");
+                        break;
+                }
+            });
+
         }
         stage.centerOnScreen();
         stage.setScene(sceneSettings);
         stage.show();
     }
 
-    private void discrete(Pane paneSettings) {
+    private void discreteTunnel(Pane paneSettings) {
         try {
+            VBox vBox = new VBox();
+            vBox.setLayoutX(200);
+            vBox.setLayoutY(300);
             Label label1 = new Label("Детерменированный поток");
-            label1.setLayoutX(300);
-            label1.setLayoutY(200);
             Label label = new Label("Установите время между появлением автомобилей (от 5 - 50 секунд)");
-            label.setLayoutY(250);
-            label.setLayoutX(280);
             TextField textField = new TextField();
-            textField.setLayoutY(400);
-            textField.setLayoutX(300);
-            paneSettings.getChildren().addAll(label, label1, textField);
+            vBox.getChildren().addAll(label1, label, textField);
+            paneSettings.getChildren().add(vBox);
             startSimulation.setOnMousePressed(event -> {
                 try {
                     if (Integer.parseInt(textField.getText()) >= 5 && Integer.parseInt(textField.getText()) <= 50) {
@@ -77,5 +102,9 @@ public class SettingsScene {
                 Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void discreteHighway() {
+
     }
 }

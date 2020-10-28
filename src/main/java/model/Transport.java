@@ -22,11 +22,8 @@ public class Transport extends Rectangle {
         this.setWidth(50);
         this.setFill(ip);
         animation.setNode(this);
-        animation.setFromX(0);
-        animation.setToX(1000);
         animation.setByX(10f);
         animation.setByY(10f);
-        animation.setFromY(300);
         animation.setCycleCount(1);
         animation.setRate(0.025);
         animation.setInterpolator(Interpolator.LINEAR);

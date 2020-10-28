@@ -4,18 +4,18 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import main.java.model.BuilderRoad;
-import main.java.view.GenericScene;
+import main.java.view.GenericSceneTunnel;
 
 public class ControllerSettingsSimulation implements EventHandler<ActionEvent> {
 
-    private GenericScene genericScene;
+    private GenericSceneTunnel genericSceneTunnel;
 
     public ControllerSettingsSimulation(Stage stage, BuilderRoad road){
-        this.genericScene = new GenericScene(stage, road);
+        this.genericSceneTunnel = new GenericSceneTunnel(stage, road);
     }
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        genericScene.start();
+        genericSceneTunnel.start();
     }
 }

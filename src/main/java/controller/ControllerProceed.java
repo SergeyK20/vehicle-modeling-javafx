@@ -8,25 +8,28 @@ import java.util.Map;
 
 public class ControllerProceed implements EventHandler<ActionEvent> {
 
-    private Map<String, Transport> list;
+    private Map<String, Transport>[] listListsAutoInRoad;
     private Boolean isPause;
 
-    public ControllerProceed(Map<String, Transport> list) {
-        this.list = list;
+    @SafeVarargs
+    public ControllerProceed(Map<String, Transport>... listListsAutoInRoad) {
+        this.listListsAutoInRoad = listListsAutoInRoad;
     }
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        if (!list.isEmpty()) {
-            for (Transport transport : list.values()) {
-                System.out.println(transport.getIdNode());
-                if (!transport.isFlagPause()) {
-                    transport.getAnimation().play();
+        int i = 0;
+        while(i < listListsAutoInRoad.length) {
+            if (!listListsAutoInRoad[i].isEmpty()) {
+                for (Transport transport : listListsAutoInRoad[i].values()) {
                     System.out.println(transport.getIdNode());
+                    if (!transport.isFlagPause()) {
+                        transport.getAnimation().play();
+                        System.out.println(transport.getIdNode());
+                    }
                 }
             }
-
-            System.out.println("Продолжить...");
+            i++;
         }
     }
 
