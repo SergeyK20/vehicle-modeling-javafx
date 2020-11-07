@@ -19,14 +19,17 @@ import main.java.model.LogicTunnel;
 import main.java.model.Transport;
 import main.java.model.Tunnel;
 
+import javax.naming.PartialResultException;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.*;
 
 public class GenericSceneTunnel {
 
     private Stage stage;
-    private static long index = 0;
-    private boolean flagClose = false;
+    private long index;
+    private boolean flagClose;
     private Button btnChangeSpeed;
     private TextField speedKmCh;
     private Transport transportChangeSpeed;
@@ -37,10 +40,22 @@ public class GenericSceneTunnel {
     private Boolean isNewTimes;
     private BuilderRoad road;
     private ExecutorService executorService;
+    private SettingsScene settingsScene;
+    private LogicTunnel logicTunnel;
+    private List<Double> testList = new ArrayList<Double>();
 
-    public GenericSceneTunnel(Stage stage, BuilderRoad road) {
+    public GenericSceneTunnel(Stage stage, BuilderRoad road, SettingsScene settingsScene) {
         this.stage = stage;
         this.road = road;
+        this.settingsScene = settingsScene;
+        isPause = false;
+        isNewTimes = false;
+        flagClose = false;
+        index = 0;
+    }
+
+    private void setFlagClose(){
+        this.flagClose = true;
     }
 
     public void start() {
@@ -51,9 +66,7 @@ public class GenericSceneTunnel {
         Pane pane = new Pane();
         pane.setBackground(bk);
 
-        //инициализация
-        isPause = false;
-        isNewTimes = false;
+
 
         //если туннель, то плявляется доболнительный функционал по изменениию скорости
         if (road instanceof Tunnel) {
@@ -97,6 +110,34 @@ public class GenericSceneTunnel {
         Button stop = new Button("Остановить");
         stop.setLayoutY(550);
         stop.setLayoutX(600);
+        stop.setOnAction(actionEvent -> {
+            testList.sort(new Comparator<Double>() {
+                @Override
+                public int compare(Double o1, Double o2) {
+                    return o1.compareTo(o2);
+                }
+            });
+
+            int size = testList.size();
+            double raz = testList.get(size - 1) - testList.get(0);
+            double shag = raz / 25.0;
+            int i = 0;
+            double temp = testList.get(0);
+            while(temp < testList.get(size - 1)) {
+                temp += shag;
+                while (i < size && testList.get(i) <= temp) {
+                    System.out.print("*");
+                    i++;
+                }
+                System.out.println();
+            }
+            setFlagClose();
+            isPause = true;
+            logicTunnel.setClose(true);
+            executorService.shutdown();
+            settingsScene.start();
+        });
+
         pane.getChildren().addAll(pause, stop, proceed);
 
 
@@ -123,7 +164,7 @@ public class GenericSceneTunnel {
 
         //сцена на которой все располагается
         Scene scene = new Scene(pane, 800, 600);
-        stage.setResizable(false);
+        /*stage.setResizable(false);*/
         stage.setScene(scene);
         stage.show();
 
@@ -136,11 +177,12 @@ public class GenericSceneTunnel {
             executorService = Executors.newFixedThreadPool(2);
 
             executorService.execute(() -> {
-                startMod(listAutoInRoad, pane, listFromY.get(0), 0, 1000);
+                startMod(listAutoInRoad, pane, listFromY.get(0), -100, 1000);
             });
 
+            logicTunnel = new LogicTunnel(listAutoInRoad);
             // поток запускающий проверку на столкновение
-            executorService.execute(new LogicTunnel(listAutoInRoad));
+            executorService.execute(logicTunnel);
 
             pause.setOnMousePressed(event -> {
                 ControllerPause controllerPause = new ControllerPause(this, listAutoInRoad);
@@ -148,6 +190,7 @@ public class GenericSceneTunnel {
                 isPause = true;
                 isNewTimes = true;
             });
+
             proceed.setOnMousePressed(event -> {
                 ControllerProceed controllerProceed = new ControllerProceed(listAutoInRoad);
                 proceed.setOnAction(controllerProceed);
@@ -161,10 +204,10 @@ public class GenericSceneTunnel {
                     executorService = Executors.newFixedThreadPool(3);
 
                     executorService.execute(() -> {
-                        startMod(listAutoInOneRoadFromLeftToRight, pane, listFromY.get(0), 0, 1000);
+                        startMod(listAutoInOneRoadFromLeftToRight, pane, listFromY.get(0), -100, 1000);
                     });
                     executorService.execute(() -> {
-                        startMod(listAutoInOneRoadFromRightToLeft, pane, listFromY.get(1), 1000, 0);
+                        startMod(listAutoInOneRoadFromRightToLeft, pane, listFromY.get(1), 1000, -100);
                     });
 
                     pause.setOnMousePressed(event -> {
@@ -199,8 +242,10 @@ public class GenericSceneTunnel {
             int fromX,
             int toX
     ) {
+        double speed;
 
         while (!flagClose) {
+            System.out.println(flagClose);
             // проверка есть ли в данный момент пауза
             System.out.println("Pause");
             while (!isPause) {
@@ -216,38 +261,50 @@ public class GenericSceneTunnel {
                 }
 
                 //установка времени между которым появляется новая машина
-                times = road.getStreamTransport().getTimes();
+                times = Math.round(road.getStreamTransport().getTimes());
 
                 TranslateTransition tt = new TranslateTransition();
 
                 // следит за тем, чтобы модели не создавались друг на друге
-                while (index != 0 && list.get(Long.toString(index - 1)).getTranslateX() <= 100) {
+                while (index != 0 && list.get(Long.toString(index - 1)).getTranslateX() <= (fromX + 100)) {
 
                 }
 
                 tt.setFromX(fromX);
                 tt.setFromY(fromY);
                 tt.setToX(toX);
-                tt.setRate(road.getSpeed().getSpeed());
+                //установка скорости
+                speed = road.getSpeed().getSpeed();
+                testList.add(speed);
+                System.out.println("speed " + speed);
+                System.out.println("times " + times);
+                tt.setRate(speed / 2000.0);
                 //создание новой машины
                 Transport transport = new Transport(index, tt);
 
                 //добавление ее в список для отслеживания правил пдд
                 list.put(Long.toString(index++), transport);
 
-                //время создания новой машины (нужна, если будет пауза)
-                startNewAuto = System.nanoTime();
-
                 //добавляет новую модель на сцену
                 Platform.runLater(() -> {
                     pane.getChildren().add(transport);
                 });
 
+
+
+                //время создания новой машины (нужна, если будет пауза)
+                startNewAuto = System.nanoTime();
+
+
+                System.out.println(transport.getTranslateX());
+
+                System.out.println(transport.getTranslateX());
+
                 //выделяет каждую машину при нажатии
                 transport.addEventHandler(MouseEvent.MOUSE_PRESSED,
                         new ControllerObjectSelection(list, this)
                 );
-
+                System.out.println(transport.getTranslateX());
                 //устанаввливает временную задежку между созданием машин
                 try {
                     TimeUnit.SECONDS.sleep(times);
@@ -255,8 +312,11 @@ public class GenericSceneTunnel {
                     System.out.println(e.getMessage());
                 }
 
+
+
                 //дейсвие перед окончанием анимации машины
                 tt.setOnFinished(event -> {
+
                     System.out.println("Закончил");
                     list.remove(Long.toString(transport.getIdNode()));
                     pane.getChildren().remove(tt.getNode());

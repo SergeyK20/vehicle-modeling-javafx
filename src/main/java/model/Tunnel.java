@@ -19,16 +19,16 @@ public class Tunnel implements BuilderRoad {
 
     @Override
     public void setSpeed(String nameDistributionLow, int... args) {
-        if (nameDistributionLow.equals("norm")) {
+        if (nameDistributionLow.equals(Distribution.NORM.getNameDistribution())) {
             speed = new Speed(this, args[0], args[1]);
         }
-        if (nameDistributionLow.equals("uniform")) {
-            speed = new Speed(this, args[0], args[1], "uniform");
+        if (nameDistributionLow.equals(Distribution.UNIFORM.getNameDistribution())) {
+            speed = new Speed(this, args[0], args[1], Distribution.UNIFORM.getNameDistribution());
         }
-        if (nameDistributionLow.equals("exponential")) {
-            speed = new Speed(this, args[0], "exponential");
+        if (nameDistributionLow.equals(Distribution.EXPONENTIAL.getNameDistribution())) {
+            speed = new Speed(this, args[0], Distribution.EXPONENTIAL.getNameDistribution());
         }
-        if (nameDistributionLow.equals("discrete")) {
+        if (nameDistributionLow.equals(Distribution.DETERMINISTIC.getNameDistribution())) {
             speed = new Speed(this, args[0]);
         }
     }
@@ -40,16 +40,16 @@ public class Tunnel implements BuilderRoad {
 
     @Override
     public void setStreamTransport(String nameDistributionLow, int... args) {
-        if (nameDistributionLow.equals("norm")) {
+        if (nameDistributionLow.equals(Distribution.NORM.getNameDistribution())) {
             streamTransport = new StreamTransport(this, args[0], args[1]);
         }
-        if (nameDistributionLow.equals("uniform")) {
-            streamTransport = new StreamTransport(this, args[0], args[1], "uniform");
+        if (nameDistributionLow.equals(Distribution.UNIFORM.getNameDistribution())) {
+            streamTransport = new StreamTransport(this, args[0], args[1], Distribution.UNIFORM.getNameDistribution());
         }
-        if (nameDistributionLow.equals("exponential")) {
-            streamTransport = new StreamTransport(this, args[0], "exponential");
+        if (nameDistributionLow.equals(Distribution.EXPONENTIAL.getNameDistribution())) {
+            streamTransport = new StreamTransport(this, args[0], Distribution.EXPONENTIAL.getNameDistribution());
         }
-        if (nameDistributionLow.equals("discrete")) {
+        if (nameDistributionLow.equals(Distribution.DETERMINISTIC.getNameDistribution())) {
             streamTransport = new StreamTransport(this, args[0]);
         }
     }

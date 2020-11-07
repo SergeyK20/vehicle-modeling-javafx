@@ -8,14 +8,27 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
 public class Transport extends Rectangle {
 
     private long idNode;
     private TranslateTransition animation;
     private boolean flagPause;
+    private int randomImage;
+    private Map<Integer, String> mapImage;
+
+    {
+        mapImage = new HashMap<Integer, String>();
+        mapImage.put(1, "/image/auto1.jpg");
+        mapImage.put(2, "/image/auto2.png");
+        randomImage = (int) Math.round(new Random().nextDouble() + 1);
+    }
 
     public Transport(long idNode, TranslateTransition animation) {
-        ImagePattern ip = new ImagePattern(new Image(getClass().getResourceAsStream("/image/auto1.jpg")));
+        ImagePattern ip = new ImagePattern(new Image(getClass().getResourceAsStream(mapImage.get(randomImage))));
         this.idNode = idNode;
         this.animation = animation;
         this.setHeight(40);
@@ -25,7 +38,7 @@ public class Transport extends Rectangle {
         animation.setByX(10f);
         animation.setByY(10f);
         animation.setCycleCount(1);
-        animation.setRate(0.025);
+        //animation.setRate(0.025);
         animation.setInterpolator(Interpolator.LINEAR);
         animation.play();
     }

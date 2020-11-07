@@ -1,7 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="" />
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javafx-project/main/java/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/javafx-project/main/java/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javafx-project/main/java/controller/ControllerSettingsSimulation.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/javafx-project/main/java/controller/ControllerSettingsSimulation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javafx-project/main/java/controller/ControllerStartScene.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/javafx-project/main/java/controller/ControllerStartScene.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javafx-project/main/java/model/Highway.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/javafx-project/main/java/model/Highway.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javafx-project/main/java/model/LogicTunnel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/javafx-project/main/java/model/LogicTunnel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javafx-project/main/java/model/Speed.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/javafx-project/main/java/model/Speed.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javafx-project/main/java/model/StreamTransport.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/javafx-project/main/java/model/StreamTransport.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javafx-project/main/java/model/Transport.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/javafx-project/main/java/model/Transport.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javafx-project/main/java/model/Tunnel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/javafx-project/main/java/model/Tunnel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javafx-project/main/java/view/GenericSceneTunnel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/javafx-project/main/java/view/GenericSceneTunnel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javafx-project/main/java/view/SettingsScene.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/javafx-project/main/java/view/SettingsScene.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/javafx-project/main/java/view/StartScene.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/javafx-project/main/java/view/StartScene.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/ControllerSettingsSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/ControllerSettingsSimulation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controller/ControllerStartScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/ControllerStartScene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Highway.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Highway.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/LogicTunnel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/LogicTunnel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Speed.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Speed.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/StreamTransport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/StreamTransport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Transport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Transport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/model/Tunnel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/model/Tunnel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/view/GenericSceneTunnel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/GenericSceneTunnel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/view/SettingsScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/SettingsScene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/view/StartScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/view/StartScene.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -58,8 +85,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="CSS File" />
-        <option value="Enum" />
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -68,6 +95,9 @@
     <FindUsagesManager>
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectCodeStyleSettingsMigration">
@@ -94,7 +124,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="dynamic.classpath" value="false" />
-    <property name="last_opened_file_path" value="$PATH_TO_FX$/lib" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -201,6 +231,11 @@
       </method>
     </configuration>
   </component>
+  <component name="StructureViewFactory">
+    <option name="AUTOSCROLL_MODE" value="false" />
+    <option name="AUTOSCROLL_FROM_SOURCE" value="true" />
+    <option name="ACTIVE_ACTIONS" value=",SHOW_PROPERTIES" />
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -223,6 +258,9 @@
       <workItem from="1602678853599" duration="10715000" />
       <workItem from="1602736404506" duration="39208000" />
       <workItem from="1603813584031" duration="44186000" />
+      <workItem from="1603981987672" duration="661000" />
+      <workItem from="1604532092715" duration="57220000" />
+      <workItem from="1604750548558" duration="10807000" />
     </task>
     <servers />
   </component>
@@ -246,10 +284,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="463" y="75" key="#com.intellij.ide.macro.MacrosDialog/0.0.1366.738@0.0.1366.738" timestamp="1601895146049" />
-    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser" timestamp="1603913484629">
+    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser" timestamp="1604755671983">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser/0.0.1366.738@0.0.1366.738" timestamp="1603913484629" />
+    <state x="488" y="79" key="#com.intellij.ide.util.MemberChooser/0.0.1366.738@0.0.1366.738" timestamp="1604755671983" />
     <state x="413" y="151" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1602762556669">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -266,10 +304,10 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="479" y="276" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.packages/0.0.1366.738@0.0.1366.738" timestamp="1602689005774" />
-    <state x="287" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1603912795522">
+    <state x="287" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1604665916293">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="287" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1366.738@0.0.1366.738" timestamp="1603912795522" />
+    <state x="287" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1366.738@0.0.1366.738" timestamp="1604665916293" />
     <state x="413" y="117" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1602257369779">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
@@ -278,50 +316,58 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="413" y="124" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/0.0.1366.738@0.0.1366.738" timestamp="1601892292205" />
-    <state x="389" y="111" key="FileChooserDialogImpl" timestamp="1601895108074">
+    <state x="380" y="0" key="CommitChangelistDialog2" timestamp="1604781212925">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="389" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1601895108074" />
-    <state width="1323" height="81" key="GridCell.Tab.0.bottom" timestamp="1603923362360">
+    <state x="380" y="0" key="CommitChangelistDialog2/0.0.1366.738@0.0.1366.738" timestamp="1604781212925" />
+    <state x="171" y="124" key="DiffContextDialog" timestamp="1604781188101">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1323" height="81" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1603923362360" />
-    <state width="1323" height="81" key="GridCell.Tab.0.center" timestamp="1603923362359">
+    <state x="171" y="124" key="DiffContextDialog/0.0.1366.738@0.0.1366.738" timestamp="1604781188101" />
+    <state x="389" y="111" key="FileChooserDialogImpl" timestamp="1603984542946">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1323" height="81" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1603923362359" />
-    <state width="1323" height="81" key="GridCell.Tab.0.left" timestamp="1603923362358">
+    <state x="389" y="111" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1603984542946" />
+    <state width="1323" height="11" key="GridCell.Tab.0.bottom" timestamp="1604780826735">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1323" height="81" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1603923362358" />
-    <state width="1323" height="81" key="GridCell.Tab.0.right" timestamp="1603923362359">
+    <state width="1323" height="11" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1604780826735" />
+    <state width="1323" height="11" key="GridCell.Tab.0.center" timestamp="1604780826734">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1323" height="81" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1603923362359" />
-    <state width="1323" height="246" key="GridCell.Tab.1.bottom" timestamp="1603920481413">
+    <state width="1323" height="11" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1604780826734" />
+    <state width="1323" height="11" key="GridCell.Tab.0.left" timestamp="1604780826734">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1323" height="246" key="GridCell.Tab.1.bottom/0.0.1366.738@0.0.1366.738" timestamp="1603920481413" />
-    <state width="1323" height="246" key="GridCell.Tab.1.center" timestamp="1603920481412">
+    <state width="1323" height="11" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1604780826734" />
+    <state width="1323" height="11" key="GridCell.Tab.0.right" timestamp="1604780826735">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1323" height="246" key="GridCell.Tab.1.center/0.0.1366.738@0.0.1366.738" timestamp="1603920481412" />
-    <state width="1323" height="246" key="GridCell.Tab.1.left" timestamp="1603920481412">
+    <state width="1323" height="11" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1604780826735" />
+    <state width="1323" height="30" key="GridCell.Tab.1.bottom" timestamp="1604757978486">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1323" height="246" key="GridCell.Tab.1.left/0.0.1366.738@0.0.1366.738" timestamp="1603920481412" />
-    <state width="1323" height="246" key="GridCell.Tab.1.right" timestamp="1603920481413">
+    <state width="1323" height="30" key="GridCell.Tab.1.bottom/0.0.1366.738@0.0.1366.738" timestamp="1604757978486" />
+    <state width="1323" height="30" key="GridCell.Tab.1.center" timestamp="1604757978486">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1323" height="246" key="GridCell.Tab.1.right/0.0.1366.738@0.0.1366.738" timestamp="1603920481413" />
+    <state width="1323" height="30" key="GridCell.Tab.1.center/0.0.1366.738@0.0.1366.738" timestamp="1604757978486" />
+    <state width="1323" height="30" key="GridCell.Tab.1.left" timestamp="1604757978486">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1323" height="30" key="GridCell.Tab.1.left/0.0.1366.738@0.0.1366.738" timestamp="1604757978486" />
+    <state width="1323" height="30" key="GridCell.Tab.1.right" timestamp="1604757978486">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1323" height="30" key="GridCell.Tab.1.right/0.0.1366.738@0.0.1366.738" timestamp="1604757978486" />
     <state x="163" y="0" key="SettingsEditor" timestamp="1603910039819">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="163" y="0" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1603910039819" />
-    <state x="379" y="194" key="com.intellij.ide.util.TipDialog" timestamp="1603813584970">
+    <state x="379" y="194" key="com.intellij.ide.util.TipDialog" timestamp="1604750546458">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="379" y="194" key="com.intellij.ide.util.TipDialog/0.0.1366.738@0.0.1366.738" timestamp="1603813584970" />
+    <state x="379" y="194" key="com.intellij.ide.util.TipDialog/0.0.1366.738@0.0.1366.738" timestamp="1604750546458" />
     <state x="339" y="165" key="run.anything.popup" timestamp="1603875894698">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
