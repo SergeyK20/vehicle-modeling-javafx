@@ -9,7 +9,7 @@ public class Highway implements BuilderRoad {
 
     @Override
     public void setCountRoadBackground(int n) {
-
+        background = new Background(this, n);
     }
 
     @Override

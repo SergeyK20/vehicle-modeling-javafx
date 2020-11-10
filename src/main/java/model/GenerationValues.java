@@ -13,6 +13,6 @@ public class GenerationValues {
     }
 
     static public double generationExponential(double intensity) {
-        return Math.log(1 - new Random().nextDouble()) / -intensity;
+        return -1 / (intensity) * Math.log(new Random().nextDouble());
     }
 }

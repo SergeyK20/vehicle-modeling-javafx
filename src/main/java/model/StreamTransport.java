@@ -73,7 +73,7 @@ public class StreamTransport {
             return times;
         }
         if (nameDistributionLow.equals(Distribution.EXPONENTIAL.getNameDistribution())) {
-            this.times = GenerationValues.generationExponential(intensity * 10);
+            this.times = GenerationValues.generationExponential(intensity / 60.0) + 1;
             return times;
         }
         return times;

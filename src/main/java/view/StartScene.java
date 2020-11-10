@@ -83,7 +83,6 @@ public class StartScene {
         simulationSettings.setOnMousePressed(event -> {
             if (comboBox.getValue().equals("Тоннель")) {
                 road = new Tunnel();
-                road.setCountRoadBackground(1);
             } else {
                 road = new Highway();
             }

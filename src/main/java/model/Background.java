@@ -12,7 +12,7 @@ import java.util.List;
 public class Background {
 
     private javafx.scene.layout.Background background;
-    private int countLine;
+    private int countRoad;
     private BuilderRoad road;
 
     public Background(Tunnel tunnel) {
@@ -30,7 +30,7 @@ public class Background {
                                 false)
                 )
         );
-        this.countLine = 1;
+        this.countRoad = 1;
         this.road = tunnel;
     }
 
@@ -50,7 +50,7 @@ public class Background {
                                 false)
                 )
         );
-        this.countLine = n;
+        this.countRoad = n;
         this.road = highway;
     }
 
@@ -63,21 +63,21 @@ public class Background {
         this.background = background;
     }
 
-    public int getCountLine() {
-        return countLine;
+    public int getCountRoad() {
+        return countRoad;
     }
 
-    public void setCountLine(int countLine) {
-        this.countLine = countLine;
+    public void setCountRoad(int countRoad) {
+        this.countRoad = countRoad;
     }
 
     public List<Integer> getListFromY() {
         List<Integer> listFromY = new ArrayList<Integer>();
         if (road instanceof Highway) {
-            switch (countLine) {
+            switch (countRoad) {
                 case 1:
-                    listFromY.add(230);
-                    listFromY.add(325);
+                    listFromY.add(200);
+                    listFromY.add(295);
                     break;
                 case 2:
                     listFromY.add(140);

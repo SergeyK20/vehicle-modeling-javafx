@@ -38,7 +38,6 @@ public class Transport extends Rectangle {
         animation.setByX(10f);
         animation.setByY(10f);
         animation.setCycleCount(1);
-        //animation.setRate(0.025);
         animation.setInterpolator(Interpolator.LINEAR);
         animation.play();
     }

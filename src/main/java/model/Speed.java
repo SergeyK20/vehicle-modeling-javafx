@@ -63,15 +63,15 @@ public class Speed {
 
     public double getSpeed() {
         if (nameDistributionLow.equals(Distribution.NORM.getNameDistribution())) {
-            this.speed = GenerationValues.generationNorm(Math.sqrt(dispersion), expectedValue);
+            speed = GenerationValues.generationNorm(Math.sqrt(dispersion), expectedValue);
             return speed;
         }
         if (nameDistributionLow.equals(Distribution.UNIFORM.getNameDistribution())) {
-            this.speed = GenerationValues.generationUniform(startBoundary, endBoundary);
+            speed = GenerationValues.generationUniform(startBoundary, endBoundary);
             return speed;
         }
         if (nameDistributionLow.equals(Distribution.EXPONENTIAL.getNameDistribution())) {
-            this.speed = GenerationValues.generationExponential(800 / intensity);
+            speed = Math.round(GenerationValues.generationExponential(1/ (intensity / 60.0))) + 20;
             return speed;
         }
         return speed;
