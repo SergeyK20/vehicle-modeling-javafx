@@ -2,6 +2,7 @@ package main.java.model;
 
 
 import javafx.animation.Interpolator;
+import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -14,11 +15,12 @@ import java.util.Random;
 
 public class Transport extends Rectangle {
 
-    private long idNode;
+    private volatile long idNode;
     private TranslateTransition animation;
     private boolean flagPause;
     private int randomImage;
     private Map<Integer, String> mapImage;
+    private volatile boolean isOvertaking;
 
     {
         mapImage = new HashMap<Integer, String>();
@@ -72,5 +74,13 @@ public class Transport extends Rectangle {
 
     public void setFlagPause(boolean flagPause) {
         this.flagPause = flagPause;
+    }
+
+    public boolean isOvertaking() {
+        return isOvertaking;
+    }
+
+    public void setOvertaking(boolean overtaking) {
+        isOvertaking = overtaking;
     }
 }

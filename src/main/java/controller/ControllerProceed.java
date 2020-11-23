@@ -4,24 +4,26 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import main.java.model.Transport;
 
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ControllerProceed implements EventHandler<ActionEvent> {
 
-    private Map<String, Transport>[] listListsAutoInRoad;
+    private List<CopyOnWriteArrayList<Transport>> listListsAutoInRoad;
     private Boolean isPause;
 
-    @SafeVarargs
-    public ControllerProceed(Map<String, Transport>... listListsAutoInRoad) {
+    public ControllerProceed(List<CopyOnWriteArrayList<Transport>> listListsAutoInRoad) {
         this.listListsAutoInRoad = listListsAutoInRoad;
     }
 
     @Override
     public void handle(ActionEvent actionEvent) {
         int i = 0;
-        while(i < listListsAutoInRoad.length) {
-            if (!listListsAutoInRoad[i].isEmpty()) {
-                for (Transport transport : listListsAutoInRoad[i].values()) {
+        while(i < listListsAutoInRoad.size()) {
+            if (!listListsAutoInRoad.get(i).isEmpty()) {
+                for (Transport transport : listListsAutoInRoad.get(i)) {
                     System.out.println(transport.getIdNode());
                     if (!transport.isFlagPause()) {
                         transport.getAnimation().play();

@@ -9,10 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import main.java.controller.ControllerSettingsSimulation;
-import main.java.model.BuilderRoad;
-import main.java.model.Distribution;
-import main.java.model.KindModeling;
-import main.java.model.Tunnel;
+import main.java.model.*;
 
 import java.util.Objects;
 
@@ -36,7 +33,7 @@ public class SettingsScene {
         Pane paneSettings = new Pane();
         paneSettings.maxHeight(600.0);
         paneSettings.maxWidth(800.0);
-        startSimulation = new Button("Начать моелирование");
+        startSimulation = new Button("Начать моделирование");
         startSimulation.setLayoutX(400);
         startSimulation.setLayoutY(500);
 
@@ -61,11 +58,6 @@ public class SettingsScene {
         label.setLayoutY(50);
         label.setFont(new Font("Arial", 30));
 
-        paneSettings.getChildren().addAll(label, startSimulation, backBtn, comboBoxListModeling);
-
-        Scene sceneSettings = new Scene(paneSettings, 800, 600);
-
-
         if (road instanceof Tunnel) {
             label.setText("Настрока режима тоннель");
         } else {
@@ -83,6 +75,10 @@ public class SettingsScene {
             countRoad.setValueFactory(spinnerValue);
             paneSettings.getChildren().add(countRoad);
         }
+
+        paneSettings.getChildren().addAll(label, startSimulation, backBtn, comboBoxListModeling);
+
+        Scene sceneSettings = new Scene(paneSettings, 800, 600);
 
 
         if (road.getSpeed() == null || road.getSpeed().getNameDistributionLow().equals(Distribution.DETERMINISTIC.getNameDistribution())) {
@@ -241,6 +237,9 @@ public class SettingsScene {
                 Pane paneDiscrete = new Pane();
                 paneDiscrete.maxHeight(600.0);
                 paneDiscrete.maxWidth(800.0);
+                if (road instanceof Highway) {
+                    paneDiscrete.getChildren().add(countRoad);
+                }
                 paneDiscrete.getChildren().addAll(label, startSimulation, backBtn, comboBox);
                 sceneSettings.setRoot(paneDiscrete);
                 discreteTunnel(paneDiscrete);
@@ -278,6 +277,10 @@ public class SettingsScene {
                 ComboBox<String> comboBoxAccidentalSpeed = new ComboBox<>(listAccidentalDistribution);
 
                 paneForDistributionSpeed.getChildren().addAll(labelTittleSpeed, comboBoxAccidentalSpeed);
+
+                if (road instanceof Highway) {
+                    paneAccidentalDistribution.getChildren().add(countRoad);
+                }
 
                 paneAccidentalDistribution.getChildren().addAll(label, startSimulation, backBtn, comboBox, paneForDistributionSpeed, paneForDistributionTime);
 
@@ -458,7 +461,7 @@ public class SettingsScene {
                         comboBox.getValue())
         )) {
             case NORM:
-                checkingAndDeletingChildPanel(paneAccidentalDistribution, noOurLayoutX);
+                checkingAndDeletingChildPanel(paneAccidentalDistribution, noOurLayoutX, ourLayoutX);
                 norm(
                         paneAccidentalDistribution,
                         "Мат. ожидание для " + magnitude,
@@ -469,7 +472,7 @@ public class SettingsScene {
                 );
                 break;
             case UNIFORM:
-                checkingAndDeletingChildPanel(paneAccidentalDistribution, noOurLayoutX);
+                checkingAndDeletingChildPanel(paneAccidentalDistribution, noOurLayoutX, ourLayoutX);
                 uniform(
                         paneAccidentalDistribution,
                         "Минимальное значение Мат. ожидания для " + magnitude,
@@ -480,7 +483,7 @@ public class SettingsScene {
                 );
                 break;
             case EXPONENTIAL:
-                checkingAndDeletingChildPanel(paneAccidentalDistribution, noOurLayoutX);
+                checkingAndDeletingChildPanel(paneAccidentalDistribution, noOurLayoutX, ourLayoutX);
                 exponential(
                         paneAccidentalDistribution,
                         ourLayoutX == 100 ? "Количество автомобилей в минуту \n" :
@@ -493,12 +496,20 @@ public class SettingsScene {
         }
     }
 
-    private void checkingAndDeletingChildPanel(Pane paneAccidentalDistribution, int noOurLayoutX) {
-        if (paneAccidentalDistribution.getChildren().size() > 7) {
-            if (paneAccidentalDistribution.getChildren().get(7).getLayoutX() == noOurLayoutX) {
-                paneAccidentalDistribution.getChildren().remove(6);
+    private void checkingAndDeletingChildPanel(Pane paneAccidentalDistribution, int noOurLayoutX, int ourLayoutX) {
+        int endNumberElement = 7;
+        int preEndNumberElement = 6;
+        if (road instanceof Highway) {
+            ++endNumberElement;
+            ++preEndNumberElement;
+        }
+        if (paneAccidentalDistribution.getChildren().size() > endNumberElement) {
+            if (paneAccidentalDistribution.getChildren().get(endNumberElement).getLayoutX() == noOurLayoutX) {
+                paneAccidentalDistribution.getChildren().remove(preEndNumberElement);
             } else {
-                paneAccidentalDistribution.getChildren().remove(7);
+                if (paneAccidentalDistribution.getChildren().get(endNumberElement).getLayoutX() == ourLayoutX) {
+                    paneAccidentalDistribution.getChildren().remove(endNumberElement);
+                }
             }
         }
     }

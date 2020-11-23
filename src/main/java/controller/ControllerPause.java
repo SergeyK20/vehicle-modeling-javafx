@@ -3,30 +3,34 @@ package main.java.controller;
 import javafx.animation.Animation;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import main.java.model.ControlOneRoad;
 import main.java.model.Transport;
 import main.java.view.GenericSceneTunnel;
 
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ControllerPause implements EventHandler<ActionEvent> {
 
-    private Map<String, Transport>[] listListsAutoInRoad;
+    private List<CopyOnWriteArrayList<Transport>> listListsAutoInRoad;
     private Boolean newTimes;
-    private GenericSceneTunnel genericSceneTunnel;
+    private List<ControlOneRoad> controlOneRoadList;
 
-    @SafeVarargs
-    public ControllerPause(GenericSceneTunnel genericSceneTunnel, Map<String, Transport>... listListsAutoInRoad) {
+
+    public ControllerPause(List<ControlOneRoad> controlOneRoadList, List<CopyOnWriteArrayList<Transport>> listListsAutoInRoad) {
         this.listListsAutoInRoad = listListsAutoInRoad;
-        this.genericSceneTunnel = genericSceneTunnel;
+        this.controlOneRoadList = controlOneRoadList;
     }
 
     @Override
     public void handle(ActionEvent actionEvent) {
         int i = 0;
-        genericSceneTunnel.initNewTimeSec();
-        while (i < listListsAutoInRoad.length) {
-            if (!listListsAutoInRoad[i].isEmpty()) {
-                for (Transport transport : listListsAutoInRoad[i].values()) {
+        while (i < listListsAutoInRoad.size()) {
+            controlOneRoadList.get(i).getControllerGenericAuto().initNewTimeSec();
+            if (!listListsAutoInRoad.get(i).isEmpty()) {
+                for (Transport transport : listListsAutoInRoad.get(i)) {
                     if (transport.getAnimation().getStatus() == Animation.Status.RUNNING) {
                         transport.getAnimation().pause();
                     }

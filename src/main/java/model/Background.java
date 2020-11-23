@@ -80,18 +80,18 @@ public class Background {
                     listFromY.add(295);
                     break;
                 case 2:
-                    listFromY.add(140);
-                    listFromY.add(230);
-                    listFromY.add(325);
-                    listFromY.add(415);
+                    listFromY.add(120);
+                    listFromY.add(210);
+                    listFromY.add(295);
+                    listFromY.add(375);
                     break;
                 case 3:
-                    listFromY.add(50);
-                    listFromY.add(140);
-                    listFromY.add(230);
-                    listFromY.add(325);
-                    listFromY.add(415);
-                    listFromY.add(515);
+                    listFromY.add(35);
+                    listFromY.add(120);
+                    listFromY.add(210);
+                    listFromY.add(295);
+                    listFromY.add(385);
+                    listFromY.add(475);
                     break;
                 default:
             }

@@ -1,59 +1,47 @@
 package main.java.view;
 
-import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import main.java.controller.ControllerChangeSpeed;
-import main.java.controller.ControllerObjectSelection;
-import main.java.controller.ControllerPause;
-import main.java.controller.ControllerProceed;
+import main.java.controller.*;
 import main.java.model.BuilderRoad;
-import main.java.model.LogicTunnel;
+import main.java.model.ControlOneRoad;
 import main.java.model.Transport;
 import main.java.model.Tunnel;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class GenericSceneTunnel {
 
     private Stage stage;
-    private boolean flagClose;
+    private List<ControlOneRoad> controlOneRoadList;
     private Button btnChangeSpeed;
     private TextField speedKmCh;
     private Transport transportChangeSpeed;
-    private long times;
-    private Long newTimesSec = 0L;
-    private Long startNewAuto;
-    private Boolean isPause;
-    private Boolean isNewTimes;
     private BuilderRoad road;
     private ExecutorService executorService;
     private SettingsScene settingsScene;
-    private List<LogicTunnel> logicTunnelList;
-    private List<ConcurrentMap<String, Transport>> listAutoInRoad;
-    private List<Double> testList = new ArrayList<Double>();
+    //списки машин да на дорогах
+    private List<CopyOnWriteArrayList<Transport>> listAutoInRoadsFromLeftToRight;
+    private List<CopyOnWriteArrayList<Transport>> listAutoInRoadsFromRightToLeft;
+    //списки машин да на дорогах
+    private List<ControlOneRoad> listControlRoadsFromLeftToRight;
+    private List<ControlOneRoad> listControlRoadsFromRightToLeft;
 
     public GenericSceneTunnel(Stage stage, BuilderRoad road, SettingsScene settingsScene) {
         this.stage = stage;
         this.road = road;
         this.settingsScene = settingsScene;
-        isPause = false;
-        isNewTimes = false;
-        flagClose = false;
-    }
-
-    private void setFlagClose() {
-        this.flagClose = true;
+        listAutoInRoadsFromLeftToRight = new ArrayList<>();
+        listAutoInRoadsFromRightToLeft = new ArrayList<>();
+        listControlRoadsFromLeftToRight = new ArrayList<>();
+        listControlRoadsFromRightToLeft = new ArrayList<>();
     }
 
     public void start() {
@@ -101,68 +89,35 @@ public class GenericSceneTunnel {
 
         }
 
-        //список
-        //ConcurrentMap<String, Transport> listAutoInRoad = new ConcurrentHashMap<String, Transport>();
-
-        //поток нужный для старта моделирования
-
         //три кнопки внизу
         Button pause = new Button("Пауза");
         pause.setLayoutY(550);
         pause.setLayoutX(400);
-       /* pause.setOnMousePressed(event -> {
-            ControllerPause controllerPause = new ControllerPause( this, listAutoInRoad);
-            pause.setOnAction(controllerPause);
-            isPause = true;
-            isNewTimes = true;
-        });*/
+
         Button proceed = new Button("Продолжить");
         proceed.setLayoutX(500);
         proceed.setLayoutY(550);
-        /*proceed.setOnMousePressed(event -> {
-            ControllerProceed controllerProceed = new ControllerProceed(listAutoInRoad);
-            proceed.setOnAction(controllerProceed);
-            isPause = false;
-        });*/
+
         Button stop = new Button("Остановить");
         stop.setLayoutY(550);
         stop.setLayoutX(600);
-        stop.setOnAction(actionEvent -> {
-            testList.sort(new Comparator<Double>() {
-                @Override
-                public int compare(Double o1, Double o2) {
-                    return o1.compareTo(o2);
-                }
-            });
 
-            int size = testList.size();
-            double raz = testList.get(size - 1) - testList.get(0);
-            double shag = raz / 5.0;
-            int i = 0;
-            double temp = testList.get(0);
-            while (temp < testList.get(size - 1)) {
-                temp += shag;
-                while (i < size && testList.get(i) <= temp) {
-                    System.out.print("*");
-                    i++;
-                }
-                System.out.println();
-            }
-            setFlagClose();
-            isPause = true;
-            for (LogicTunnel logicTunnel : logicTunnelList) {
-                logicTunnel.setClose(true);
-            }
-            executorService.shutdown();
-            settingsScene.start();
-        });
+        Label label = new Label();
+        label.setFont(new Font("Arial", 20));
+        label.setLayoutY(550);
+        label.setLayoutX(250);
 
-        paneModelingAuto.getChildren().addAll(pause, stop, proceed);
+        if(transportChangeSpeed != null){
+            label.setText(String.valueOf(transportChangeSpeed.getIdNode()) + " " + String.valueOf(transportChangeSpeed.getAnimation().getRate() * 2000.0));
+        } else {
+            label.setText("");
+        }
+
+        paneModelingAuto.getChildren().addAll(pause, stop, proceed, label);
 
 
         //сцена на которой все располагается
         Scene scene = new Scene(paneModelingAuto, 800, 600);
-        /*stage.setResizable(false);*/
         stage.setScene(scene);
         stage.show();
 
@@ -175,157 +130,22 @@ public class GenericSceneTunnel {
                     paneModelingAuto,
                     listFromY,
                     pause,
-                    proceed
+                    proceed,
+                    stop
             );
 
         } else {
-            switch (road.getCountRoadBackground().getCountRoad()) {
-                case 1:
-                    ConcurrentMap<String, Transport> listAutoInOneRoadFromLeftToRight = new ConcurrentHashMap<String, Transport>();
-                    ConcurrentMap<String, Transport> listAutoInOneRoadFromRightToLeft = new ConcurrentHashMap<String, Transport>();
-                    executorService = Executors.newFixedThreadPool(4);
-
-                    executorService.execute(() ->
-                            startMod(listAutoInOneRoadFromLeftToRight, paneModelingAuto, listFromY.get(0), -100, 1000)
-                    );
-
-                    executorService.execute(() ->
-                            startMod(listAutoInOneRoadFromRightToLeft, paneModelingAuto, listFromY.get(1), 1000, -100)
-                    );
-
-                    executorService.execute(() ->
-                            new LogicTunnel(listAutoInOneRoadFromLeftToRight, road, -100)
-                    );
-
-                    executorService.execute(() ->
-                            new LogicTunnel(listAutoInOneRoadFromRightToLeft, road, 1000)
-                    );
-
-                    pause.setOnMousePressed(event -> {
-                        ControllerPause controllerPause = new ControllerPause(this, listAutoInOneRoadFromLeftToRight, listAutoInOneRoadFromRightToLeft);
-                        pause.setOnAction(controllerPause);
-                        isPause = true;
-                        isNewTimes = true;
-                    });
-                    proceed.setOnMousePressed(event -> {
-                        ControllerProceed controllerProceed = new ControllerProceed(listAutoInOneRoadFromLeftToRight, listAutoInOneRoadFromRightToLeft);
-                        proceed.setOnAction(controllerProceed);
-                        isPause = false;
-                    });
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                default:
-            }
+            modelingAuto(
+                    2 * road.getCountRoadBackground().getCountRoad() * 2,
+                    paneModelingAuto,
+                    listFromY,
+                    pause,
+                    proceed,
+                    stop
+            );
         }
 
 
-    }
-
-
-    // старт моделирования
-    private void startMod(
-            ConcurrentMap<String, Transport> list,
-            Pane pane,
-            int fromY,
-            int fromX,
-            int toX
-    ) {
-        double speed;
-        int index = 0;
-        while (!flagClose) {
-            System.out.println(flagClose);
-            // проверка есть ли в данный момент пауза
-            System.out.println("Pause");
-            while (!isPause) {
-                // если была пауза, то изменяем время генерации на один раз
-                if (isNewTimes) {
-                    times = TimeUnit.NANOSECONDS.convert(times, TimeUnit.SECONDS) - newTimesSec;
-                    isNewTimes = false;
-                    try {
-                        TimeUnit.NANOSECONDS.sleep(times);
-                    } catch (InterruptedException e) {
-                        System.out.println(e.getMessage());
-                    }
-                }
-
-                //установка времени между которым появляется новая машина
-                times = Math.round(road.getStreamTransport().getTimes());
-
-                TranslateTransition tt = new TranslateTransition();
-
-
-                // следит за тем, чтобы модели не создавались друг на друге
-                if (fromX == -100) {
-                    while (index != 0 && list.get(Long.toString(index - 1)).getTranslateX() <= (fromX + 100)) {
-
-                    }
-                } else {
-                    while (index != 0 && list.get(Long.toString(index - 1)).getTranslateX() <= (fromX - 100)) {
-
-                    }
-                }
-
-
-                tt.setFromX(fromX);
-                tt.setFromY(fromY);
-                tt.setToX(toX);
-                //установка скорости
-                speed = road.getSpeed().getSpeed();
-                testList.add(speed);
-                System.out.println("speed " + speed);
-                System.out.println("times " + times);
-                tt.setRate(speed / 2000.0);
-                //создание новой машины
-                Transport transport = new Transport(index, tt);
-
-                if(fromX == 1000){
-                    transport.setRotate(180);
-                }
-
-                //добавление ее в список для отслеживания правил пдд
-                list.put(Long.toString(index++), transport);
-
-                //добавляет новую модель на сцену
-                Platform.runLater(() -> {
-                    pane.getChildren().add(transport);
-                });
-
-
-                //время создания новой машины (нужна, если будет пауза)
-                startNewAuto = System.nanoTime();
-
-
-                System.out.println(transport.getTranslateX());
-
-                System.out.println(transport.getTranslateX());
-
-                //выделяет каждую машину при нажатии
-                transport.addEventHandler(MouseEvent.MOUSE_PRESSED,
-                        new ControllerObjectSelection(list, this)
-                );
-                System.out.println(transport.getTranslateX());
-                //устанаввливает временную задежку между созданием машин
-                try {
-                    TimeUnit.SECONDS.sleep(times);
-                } catch (InterruptedException e) {
-                    System.out.println(e.getMessage());
-                }
-
-
-                //дейсвие перед окончанием анимации машины
-                tt.setOnFinished(event -> {
-
-                    System.out.println("Закончил");
-                    list.remove(Long.toString(transport.getIdNode()));
-                    pane.getChildren().remove(tt.getNode());
-                    tt.stop();
-                    tt.setDuration(Duration.ZERO);
-                });
-            }
-        }
     }
 
     // получение информации какой транспорт выделен
@@ -333,44 +153,105 @@ public class GenericSceneTunnel {
         this.transportChangeSpeed = transportChangeSpeed;
     }
 
-    // получение времени прошедшего с начала ожидания создания до паузы
-    public void initNewTimeSec() {
-        this.newTimesSec = System.nanoTime() - startNewAuto;
-    }
-
-    private void modelingAuto(int nThreads, Pane paneModelingAuto, List<Integer> listFromY, Button pause, Button proceed) {
-        listAutoInRoad = new ArrayList<>(nThreads / 2);
-        logicTunnelList = new ArrayList<>(nThreads / 2);
+    private void modelingAuto(int nThreads, Pane paneModelingAuto, List<Integer> listFromY, Button pause, Button proceed, Button stop) {
+        //сисок содержащий списки автомобилей на каждой дороге
+        List<CopyOnWriteArrayList<Transport>> listRoads = new ArrayList<CopyOnWriteArrayList<Transport>>();
+        //список сожержащий элементы(генерация , логика)
+        controlOneRoadList = new ArrayList<>();
+        //создаем фиксированный пул потоков
         executorService = Executors.newFixedThreadPool(nThreads);
 
+        //создаем список со всеми объектами для генерации и логики
         for (int i = 0; i < (nThreads / 2); i++) {
-            listAutoInRoad.add(new ConcurrentHashMap<>());
-            logicTunnelList.add(new LogicTunnel(listAutoInRoad.get(i), road, -100));
+            //добавляем новый элемент(контроллер генерации машин на дороге, логика машин) в список
+            CopyOnWriteArrayList<Transport> concurrentList = new CopyOnWriteArrayList<Transport>();
+            controlOneRoadList.add(new ControlOneRoad(
+                    new ControllerGenericAuto(
+                            this,
+                            road,
+                            concurrentList,
+                            paneModelingAuto,
+                            listFromY.get(i),
+                            road.getCountRoadBackground().getCountRoad() - i > 0 ?
+                                    -100 :
+                                    1000,
+                            road.getCountRoadBackground().getCountRoad() - i > 0 ?
+                                    1000 :
+                                    -100),
+                    new ControllerLogicAuto(
+                            i,
+                            road,
+                            road.getCountRoadBackground().getCountRoad() - i > 0 ?
+                                    -100 :
+                                    1000))
+            );
+
+            //добавляем списки автомобилей в соответствующий им список(по направлению)
+            if (road.getCountRoadBackground().getCountRoad() - i > 0) {
+                listAutoInRoadsFromLeftToRight.add(concurrentList);
+                listControlRoadsFromLeftToRight.add(controlOneRoadList.get(i));
+            } else {
+                listAutoInRoadsFromRightToLeft.add(concurrentList);
+                listControlRoadsFromRightToLeft.add(controlOneRoadList.get(i));
+            }
+
             int finalI = i;
             executorService.execute(() ->
-                    startMod(listAutoInRoad.get(finalI), paneModelingAuto, listFromY.get(0), -100, 1000)
+                    controlOneRoadList.get(finalI).getControllerGenericAuto().run()
             );
             executorService.execute(() ->
-                    logicTunnelList.get(finalI).run()
+                    controlOneRoadList.get(finalI).getControllerLogicAuto().run()
+            );
+        }
+
+        for (int i = 0; i < (nThreads / 2); i++) {
+            controlOneRoadList.get(i).getControllerLogicAuto().setListOfRoads(
+                    (road.getCountRoadBackground().getCountRoad() - i > 0) ? listAutoInRoadsFromLeftToRight
+                            : listAutoInRoadsFromRightToLeft
             );
 
         }
 
+        for (int i = 0; i < (nThreads / 2); i++) {
+            controlOneRoadList.get(i).getControllerLogicAuto().setListControlTheRoadSingleDirection(
+                    (road.getCountRoadBackground().getCountRoad() - i > 0) ? listControlRoadsFromLeftToRight
+                            : listControlRoadsFromRightToLeft
+            );
+
+        }
+
+        listRoads.addAll(listAutoInRoadsFromLeftToRight);
+        listRoads.addAll(listAutoInRoadsFromRightToLeft);
+
+        //событие при нажатие кнопки пауза
         pause.setOnMousePressed(event -> {
+            //сообщаем контроллеру генерации, чтобы не создавал новые машины
             for (int i = 0; i < (nThreads / 2); i++) {
-                ControllerPause controllerPause = new ControllerPause(this, listAutoInRoad.get(i));
-                pause.setOnAction(controllerPause);
+                controlOneRoadList.get(i).getControllerGenericAuto().setPause(true);
+                controlOneRoadList.get(i).getControllerGenericAuto().setNewTimes(true);
             }
-            isPause = true;
-            isNewTimes = true;
+
+            ControllerPause controllerPause = new ControllerPause(controlOneRoadList, listRoads);
+            pause.setOnAction(controllerPause);
         });
 
         proceed.setOnMousePressed(event -> {
             for (int i = 0; i < (nThreads / 2); i++) {
-                ControllerProceed controllerProceed = new ControllerProceed(listAutoInRoad.get(i));
-                proceed.setOnAction(controllerProceed);
+                controlOneRoadList.get(i).getControllerGenericAuto().setPause(false);
             }
-            isPause = false;
+            ControllerProceed controllerProceed = new ControllerProceed(listRoads);
+            proceed.setOnAction(controllerProceed);
+        });
+
+        stop.setOnMousePressed(event -> {
+            for (int i = 0; i < (nThreads / 2); i++) {
+                controlOneRoadList.get(i).getControllerGenericAuto().setFlagClose(true);
+                controlOneRoadList.get(i).getControllerGenericAuto().setPause(true);
+                controlOneRoadList.get(i).getControllerLogicAuto().setClose(true);
+            }
+
+            executorService.shutdown();
+            settingsScene.start();
         });
     }
 
