@@ -16,7 +16,7 @@ import java.util.Random;
 public class Transport extends Rectangle {
 
     private volatile long idNode;
-    private TranslateTransition animation;
+    private volatile TranslateTransition animation;
     private boolean flagPause;
     private int randomImage;
     private Map<Integer, String> mapImage;

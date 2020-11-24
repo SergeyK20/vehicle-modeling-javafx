@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import main.java.controller.*;
 import main.java.model.BuilderRoad;
@@ -118,6 +119,8 @@ public class GenericSceneTunnel {
 
         //сцена на которой все располагается
         Scene scene = new Scene(paneModelingAuto, 800, 600);
+        stage.setX((Screen.getPrimary().getBounds().getMaxX()  - 800.0) / 2.0);
+        stage.setY((Screen.getPrimary().getBounds().getMaxY()  - 600.0) / 2.0);
         stage.setScene(scene);
         stage.show();
 
@@ -196,9 +199,11 @@ public class GenericSceneTunnel {
             }
 
             int finalI = i;
+
             executorService.execute(() ->
                     controlOneRoadList.get(finalI).getControllerGenericAuto().run()
             );
+
             executorService.execute(() ->
                     controlOneRoadList.get(finalI).getControllerLogicAuto().run()
             );

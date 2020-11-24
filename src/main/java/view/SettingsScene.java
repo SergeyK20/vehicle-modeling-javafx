@@ -1,12 +1,18 @@
 package main.java.view;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.Style;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import main.java.controller.ControllerSettingsSimulation;
 import main.java.model.*;
@@ -21,7 +27,7 @@ public class SettingsScene {
     private StartScene startScene;
     private Spinner<Integer> countRoad;
     private static final int LAYOUT_X_LEFT_PANE = 100;
-    private static final int LAYOUT_X_RIGHT_PANE = 500;
+    private static final int LAYOUT_X_RIGHT_PANE = 320;
 
     public SettingsScene(Stage stage, BuilderRoad road, StartScene startScene) {
         this.stage = stage;
@@ -31,15 +37,21 @@ public class SettingsScene {
 
     public void start() {
         Pane paneSettings = new Pane();
-        paneSettings.maxHeight(600.0);
-        paneSettings.maxWidth(800.0);
+        paneSettings.maxHeight(400.0);
+        paneSettings.maxWidth(600.0);
         startSimulation = new Button("Начать моделирование");
-        startSimulation.setLayoutX(400);
-        startSimulation.setLayoutY(500);
+        startSimulation.setLayoutX(300);
+        startSimulation.setLayoutY(325);
+        startSimulation.setMaxSize(150, 50);
+        startSimulation.setMinSize(150, 50);
+        startSimulation.setFocusTraversable(false);
 
-        Button backBtn = new Button("Назад");
-        backBtn.setLayoutX(300);
-        backBtn.setLayoutY(500);
+        Button backBtn = new Button("⟵");
+        backBtn.setLayoutX(150);
+        backBtn.setLayoutY(325);
+        backBtn.setStyle("-fx-font-size: 20px");
+        backBtn.setFocusTraversable(false);
+        backBtn.setMinSize(100, 50);
         backBtn.setOnAction(event -> {
             startScene.start();
         });
@@ -50,18 +62,23 @@ public class SettingsScene {
                         KindModeling.ACCIDENTAL.getNameKindModeling()
                 );
         ComboBox<String> comboBoxListModeling = new ComboBox<>(listKindModeling);
-        comboBoxListModeling.setLayoutX(300);
-        comboBoxListModeling.setLayoutY(100);
+        comboBoxListModeling.setLayoutX(225);
+        comboBoxListModeling.setLayoutY(75);
+        comboBoxListModeling.setMaxSize(150, 25);
 
         Label label = new Label();
-        label.setLayoutX(200);
-        label.setLayoutY(50);
+
         label.setFont(new Font("Arial", 30));
 
         if (road instanceof Tunnel) {
             label.setText("Настрока режима тоннель");
+            label.setLayoutX(125);
+            label.setLayoutY(25);
         } else {
             label.setText("Настрока режима автомагистраль");
+            label.setLayoutX(100);
+            label.setLayoutY(25);
+
             countRoad = new Spinner<>();
             SpinnerValueFactory<Integer> spinnerValue;
             try {
@@ -70,15 +87,15 @@ public class SettingsScene {
             } catch (NullPointerException e) {
                 spinnerValue = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 3, 1);
             }
-            countRoad.setLayoutX(300);
-            countRoad.setLayoutY(160);
+            countRoad.setLayoutX(225);
+            countRoad.setLayoutY(110);
             countRoad.setValueFactory(spinnerValue);
             paneSettings.getChildren().add(countRoad);
         }
 
         paneSettings.getChildren().addAll(label, startSimulation, backBtn, comboBoxListModeling);
 
-        Scene sceneSettings = new Scene(paneSettings, 800, 600);
+        Scene sceneSettings = new Scene(paneSettings, 600, 400);
 
 
         if (road.getSpeed() == null || road.getSpeed().getNameDistributionLow().equals(Distribution.DETERMINISTIC.getNameDistribution())) {
@@ -94,7 +111,8 @@ public class SettingsScene {
                 selectionOfKindDistribution(sceneSettings, comboBoxListModeling, label, backBtn)
         );
 
-        stage.centerOnScreen();
+        stage.setX((Screen.getPrimary().getBounds().getMaxX() - 600.0) / 2.0);
+        stage.setY((Screen.getPrimary().getBounds().getMaxY() - 400) / 2.0);
         stage.setScene(sceneSettings);
         stage.show();
     }
@@ -102,11 +120,10 @@ public class SettingsScene {
     private void discreteTunnel(Pane paneSettings) {
         try {
             VBox vBox = new VBox();
-            vBox.setLayoutX(200);
-            vBox.setLayoutY(300);
+            vBox.setLayoutX(125);
+            vBox.setLayoutY(200);
             vBox.setMinWidth(150);
 
-            Label labelNameFlow = new Label("Детерменированный поток");
             Label labelAppointmentTime = new Label("Установите время между появлением автомобилей (от 5 - 50 секунд)");
             Label labelAppointmentSpeed = new Label("Скорость движения автомобилей (от 20-80 км/ч)");
             TextField textFieldForTime = new TextField();
@@ -117,7 +134,7 @@ public class SettingsScene {
                 textFieldForTime.setText(String.valueOf(Math.round(road.getStreamTransport().getTimes())));
             }
 
-            vBox.getChildren().addAll(labelNameFlow, labelAppointmentTime, textFieldForTime, labelAppointmentSpeed, textField2ForSpeed);
+            vBox.getChildren().addAll(labelAppointmentTime, textFieldForTime, labelAppointmentSpeed, textField2ForSpeed);
             paneSettings.getChildren().add(vBox);
 
             startSimulation.setOnMousePressed(event -> {
@@ -160,98 +177,132 @@ public class SettingsScene {
         }
     }
 
-    private void norm(Pane paneSettings, String inscriptionOne, String inscriptionTwo, int layoutX, TextField textFieldOne, TextField textFieldTwo) {
+    private void norm(Pane paneSettings, String inscriptionOne, String inscriptionTwo, int layoutX, Spinner<Integer> spinnerOne, Spinner<Integer> spinnerTwo) {
         VBox normDistributionBox = new VBox();
         normDistributionBox.setLayoutX(layoutX);
         normDistributionBox.setLayoutY(300);
 
-        textFieldOne.setMinSize(150, 25);
-        textFieldTwo.setMinSize(150, 25);
+        spinnerOne.setMaxSize(150, 25);
+        spinnerTwo.setMaxSize(150, 25);
 
-        if (road.getSpeed() != null) {
-            if (layoutX == 100) {
-                textFieldOne.setText(String.valueOf(road.getStreamTransport().getExpectedValue()));
-                textFieldTwo.setText(String.valueOf(road.getStreamTransport().getDispersion()));
-            } else {
-                textFieldOne.setText(String.valueOf(road.getSpeed().getExpectedValue()));
-                textFieldTwo.setText(String.valueOf(road.getSpeed().getDispersion()));
+        if (layoutX == 100) {
+            try {
+                Objects.requireNonNull(road.getCountRoadBackground());
+                spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4, 12, road.getStreamTransport().getExpectedValue()));
+                spinnerTwo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 6, road.getStreamTransport().getDispersion()));
+            } catch (NullPointerException e) {
+                spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4, 12, 4));
+                spinnerTwo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 6, 2));
+            }
+        } else{
+            try {
+                Objects.requireNonNull(road.getCountRoadBackground());
+                spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(20, 70, road.getSpeed().getExpectedValue()));
+                spinnerTwo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(10, 35, road.getSpeed().getDispersion()));
+            } catch (NullPointerException e) {
+                spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(20, 70, 4));
+                spinnerTwo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(10, 35, 2));
             }
         }
 
         Label label1 = new Label(inscriptionOne);
         Label label2 = new Label(inscriptionTwo);
 
-        normDistributionBox.getChildren().addAll(label1, textFieldOne, label2, textFieldTwo);
+        normDistributionBox.getChildren().addAll(label1, spinnerOne, label2, spinnerTwo);
         paneSettings.getChildren().add(normDistributionBox);
     }
 
-    private void uniform(Pane paneSettings, String inscriptionOne, String inscriptionTwo, int layoutX, TextField textFieldOne, TextField textFieldTwo) {
+    private void uniform(Pane paneSettings, String inscriptionOne, String inscriptionTwo, int layoutX, Spinner<Integer>  spinnerOne, Spinner<Integer>  spinnerTwo) {
         VBox uniformDistributionBox = new VBox();
         uniformDistributionBox.setLayoutX(layoutX);
         uniformDistributionBox.setLayoutY(300);
 
-        textFieldOne.setMaxSize(150, 25);
-        textFieldTwo.setMaxSize(150, 25);
+        spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4, 12));
+        spinnerOne.setMaxSize(150, 25);
+        spinnerTwo.setMaxSize(150, 25);
 
-        if (road.getSpeed() != null) {
-            if (layoutX == 100) {
-                textFieldOne.setText(String.valueOf(road.getStreamTransport().getStartBoundary()));
-                textFieldTwo.setText(String.valueOf(road.getStreamTransport().getEndBoundary()));
-            } else {
-                textFieldOne.setText(String.valueOf(road.getSpeed().getStartBoundary()));
-                textFieldTwo.setText(String.valueOf(road.getSpeed().getEndBoundary()));
+
+
+        if (layoutX == 100) {
+            try {
+                Objects.requireNonNull(road.getCountRoadBackground());
+                spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 15, road.getStreamTransport().getStartBoundary()));
+                spinnerTwo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 15, road.getStreamTransport().getEndBoundary()));
+            } catch (NullPointerException e) {
+                spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 15, 1));
+                spinnerTwo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 15, 15));
+            }
+        } else{
+            try {
+                Objects.requireNonNull(road.getCountRoadBackground());
+                spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(20, 100, road.getSpeed().getStartBoundary()));
+                spinnerTwo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(20, 100, road.getSpeed().getEndBoundary()));
+            } catch (NullPointerException e) {
+                spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(20, 100, 20));
+                spinnerTwo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(20, 100, 100));
             }
         }
 
         Label label1 = new Label(inscriptionOne);
         Label label2 = new Label(inscriptionTwo);
 
-        uniformDistributionBox.getChildren().addAll(label1, textFieldOne, label2, textFieldTwo);
+        uniformDistributionBox.getChildren().addAll(label1, spinnerOne, label2, spinnerTwo);
         paneSettings.getChildren().add(uniformDistributionBox);
     }
 
-    private void exponential(Pane paneSettings, String inscriptionOne, int layoutX, TextField textFieldOne) {
+    private void exponential(Pane paneSettings, String inscriptionOne, int layoutX, Spinner<Integer>  spinnerOne) {
         VBox exponentialDistributionBox = new VBox();
         exponentialDistributionBox.setLayoutX(layoutX);
         exponentialDistributionBox.setLayoutY(300);
 
-        textFieldOne.setMaxSize(150, 25);
+        spinnerOne.setMaxSize(150, 25);
 
-        if (road.getSpeed() != null) {
-            if (layoutX == 100) {
-                textFieldOne.setText(String.valueOf(road.getStreamTransport().getIntensity()));
-            } else {
-                textFieldOne.setText(String.valueOf(road.getSpeed().getIntensity()));
+        if (layoutX == 100) {
+            try {
+                Objects.requireNonNull(road.getCountRoadBackground());
+                spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(30, 120, road.getSpeed().getStartBoundary()));
+            } catch (NullPointerException e) {
+                spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(30, 120, 30));
+            }
+        } else {
+            try {
+                Objects.requireNonNull(road.getCountRoadBackground());
+                spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(500, 1500, road.getSpeed().getStartBoundary()));
+            } catch (NullPointerException e) {
+                spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(500, 1500, 500));
             }
         }
 
         Label label1 = new Label(inscriptionOne);
 
-        exponentialDistributionBox.getChildren().addAll(label1, textFieldOne);
+        exponentialDistributionBox.getChildren().addAll(label1, spinnerOne);
         paneSettings.getChildren().add(exponentialDistributionBox);
     }
 
-    private void selectionOfKindDistribution(Scene sceneSettings, ComboBox<String> comboBox, Label label, Button backBtn) {
+    private void selectionOfKindDistribution(Scene sceneSettings, ComboBox<String> comboBox, Label heading, Button backBtn) {
         switch (Objects.requireNonNull(KindModeling.ACCIDENTAL.getEnumsKindModeling(comboBox.getValue()))) {
             case DETERMINISTIC:
                 Pane paneDiscrete = new Pane();
-                paneDiscrete.maxHeight(600.0);
-                paneDiscrete.maxWidth(800.0);
+                paneDiscrete.maxHeight(400.0);
+                paneDiscrete.maxWidth(600.0);
                 if (road instanceof Highway) {
                     paneDiscrete.getChildren().add(countRoad);
                 }
-                paneDiscrete.getChildren().addAll(label, startSimulation, backBtn, comboBox);
+                paneDiscrete.getChildren().addAll(heading, startSimulation, backBtn, comboBox);
                 sceneSettings.setRoot(paneDiscrete);
                 discreteTunnel(paneDiscrete);
                 break;
             case ACCIDENTAL:
                 Pane paneAccidentalDistribution = new Pane();
-                paneAccidentalDistribution.maxHeight(600.0);
-                paneAccidentalDistribution.maxWidth(800.0);
+                paneAccidentalDistribution.maxHeight(400.0);
+                paneAccidentalDistribution.maxWidth(600.0);
 
                 VBox paneForDistributionTime = new VBox();
                 paneForDistributionTime.setLayoutX(100);
-                paneForDistributionTime.setLayoutY(250);
+                paneForDistributionTime.setLayoutY(150);
+                paneForDistributionTime.setStyle("-fx-border-style: solid; -fx-border-width: 1px; -fx-border-color: black;" +
+                        "-fx-padding: 10px");
+
 
                 Label labelTittleTime = new Label("Параметры для времени");
 
@@ -268,9 +319,10 @@ public class SettingsScene {
                 paneForDistributionTime.getChildren().addAll(labelTittleTime, comboBoxAccidentalTime);
 
                 VBox paneForDistributionSpeed = new VBox();
-                paneForDistributionSpeed.setLayoutX(500);
-                paneForDistributionSpeed.setLayoutY(250);
-                paneForDistributionSpeed.setMinSize(300, 350);
+                paneForDistributionSpeed.setLayoutX(320);
+                paneForDistributionSpeed.setLayoutY(150);
+                paneForDistributionSpeed.setStyle("-fx-border-style: solid; -fx-border-width: 1px; -fx-border-color: black;" +
+                        "-fx-padding: 10px");
 
                 Label labelTittleSpeed = new Label("Параметры для скорости");
 
@@ -282,18 +334,18 @@ public class SettingsScene {
                     paneAccidentalDistribution.getChildren().add(countRoad);
                 }
 
-                paneAccidentalDistribution.getChildren().addAll(label, startSimulation, backBtn, comboBox, paneForDistributionSpeed, paneForDistributionTime);
+                paneAccidentalDistribution.getChildren().addAll(heading, startSimulation, backBtn, comboBox, paneForDistributionSpeed, paneForDistributionTime);
 
-                TextField textFieldNormTimeMat = new TextField();
-                TextField textFieldNormTimeDis = new TextField();
-                TextField textFieldNormSpeedMat = new TextField();
-                TextField textFieldNormSpeedDis = new TextField();
-                TextField textFieldStartSpeed = new TextField();
-                TextField textFieldEndSpeed = new TextField();
-                TextField textFieldIntensitySpeed = new TextField();
-                TextField textFieldStartTime = new TextField();
-                TextField textFieldEndTime = new TextField();
-                TextField textFieldIntensityTime = new TextField();
+                Spinner<Integer> spinnerNormTimeMat = new Spinner<>();
+                Spinner<Integer> spinnerNormTimeDis = new Spinner<>();
+                Spinner<Integer> spinnerNormSpeedMat = new Spinner<>();
+                Spinner<Integer> spinnerNormSpeedDis = new Spinner<>();
+                Spinner<Integer> spinnerStartSpeed = new Spinner<>();
+                Spinner<Integer> spinnerEndSpeed = new Spinner<>();
+                Spinner<Integer> spinnerIntensitySpeed = new Spinner<>();
+                Spinner<Integer> spinnerStartTime = new Spinner<>();
+                Spinner<Integer> spinnerEndTime = new Spinner<>();
+                Spinner<Integer> spinnerIntensityTime = new Spinner<>();
 
                 //регистрация события при нажатие кнопки "Cтарт моделирования"
                 startSimulation.setOnMousePressed(actionEvent -> {
@@ -302,21 +354,20 @@ public class SettingsScene {
                             case NORM:
                                 road.setSpeed(
                                         Distribution.NORM.getNameDistribution(),
-                                        Integer.parseInt(textFieldNormSpeedMat.getText()),
-                                        Integer.parseInt(textFieldNormSpeedDis.getText())
-                                );
+                                        spinnerNormSpeedMat.getValue(),
+                                        spinnerNormSpeedDis.getValue());
                                 break;
                             case UNIFORM:
                                 road.setSpeed(
                                         Distribution.UNIFORM.getNameDistribution(),
-                                        Integer.parseInt(textFieldStartSpeed.getText()),
-                                        Integer.parseInt(textFieldEndSpeed.getText())
+                                        spinnerStartSpeed.getValue(),
+                                        spinnerEndSpeed.getValue()
                                 );
                                 break;
                             case EXPONENTIAL:
                                 road.setSpeed(
                                         Distribution.EXPONENTIAL.getNameDistribution(),
-                                        Integer.parseInt(textFieldIntensitySpeed.getText())
+                                        spinnerIntensitySpeed.getValue()
                                 );
                                 break;
                         }
@@ -325,19 +376,19 @@ public class SettingsScene {
                             case NORM:
                                 road.setStreamTransport(
                                         Distribution.NORM.getNameDistribution(),
-                                        Integer.parseInt(textFieldNormTimeMat.getText()),
-                                        Integer.parseInt(textFieldNormTimeDis.getText())
+                                        spinnerNormTimeMat.getValue(),
+                                        spinnerNormTimeDis.getValue()
                                 );
                                 break;
                             case UNIFORM:
                                 road.setStreamTransport(Distribution.UNIFORM.getNameDistribution(),
-                                        Integer.parseInt(textFieldStartTime.getText()),
-                                        Integer.parseInt(textFieldEndTime.getText())
+                                        spinnerStartTime.getValue(),
+                                        spinnerEndTime.getValue()
                                 );
                                 break;
                             case EXPONENTIAL:
                                 road.setStreamTransport(Distribution.EXPONENTIAL.getNameDistribution(),
-                                        Integer.parseInt(textFieldIntensityTime.getText())
+                                        spinnerIntensityTime.getValue()
                                 );
                                 break;
                         }
@@ -364,12 +415,12 @@ public class SettingsScene {
 
                     selectionOfDistribution(
                             comboBoxAccidentalTime,
-                            paneAccidentalDistribution,
-                            textFieldNormTimeMat,
-                            textFieldNormTimeDis,
-                            textFieldStartTime,
-                            textFieldEndTime,
-                            textFieldIntensityTime,
+                            paneForDistributionTime,
+                            spinnerNormTimeMat,
+                            spinnerNormTimeDis,
+                            spinnerStartTime,
+                            spinnerEndTime,
+                            spinnerIntensityTime,
                             LAYOUT_X_LEFT_PANE,
                             LAYOUT_X_RIGHT_PANE,
                             "времени"
@@ -377,12 +428,12 @@ public class SettingsScene {
 
                     selectionOfDistribution(
                             comboBoxAccidentalSpeed,
-                            paneAccidentalDistribution,
-                            textFieldNormSpeedMat,
-                            textFieldNormSpeedDis,
-                            textFieldStartSpeed,
-                            textFieldEndSpeed,
-                            textFieldIntensitySpeed,
+                            paneForDistributionSpeed,
+                            spinnerNormSpeedMat,
+                            spinnerNormSpeedDis,
+                            spinnerStartSpeed,
+                            spinnerEndSpeed,
+                            spinnerIntensitySpeed,
                             LAYOUT_X_RIGHT_PANE,
                             LAYOUT_X_LEFT_PANE,
                             "скорости"
@@ -391,21 +442,21 @@ public class SettingsScene {
                     comboBoxAccidentalTime.setValue(Distribution.NORM.getNameDistribution());
                     comboBoxAccidentalSpeed.setValue(Distribution.NORM.getNameDistribution());
                     norm(
-                            paneAccidentalDistribution,
+                            paneForDistributionTime,
                             "Мат. ожидание для времени",
                             "Дисперсия для времени",
                             LAYOUT_X_LEFT_PANE,
-                            textFieldNormTimeMat,
-                            textFieldNormTimeDis
+                            spinnerNormTimeMat,
+                            spinnerNormTimeDis
                     );
 
                     norm(
-                            paneAccidentalDistribution,
+                            paneForDistributionSpeed,
                             "Мат. ожидание для скорости",
                             "Дисперсия для скорости",
                             LAYOUT_X_RIGHT_PANE,
-                            textFieldNormSpeedMat,
-                            textFieldNormSpeedDis
+                            spinnerNormSpeedMat,
+                            spinnerNormSpeedDis
                     );
                 }
 
@@ -413,12 +464,12 @@ public class SettingsScene {
                 comboBoxAccidentalTime.setOnAction(event1 -> {
                     selectionOfDistribution(
                             comboBoxAccidentalTime,
-                            paneAccidentalDistribution,
-                            textFieldNormTimeMat,
-                            textFieldNormTimeDis,
-                            textFieldStartTime,
-                            textFieldEndTime,
-                            textFieldIntensityTime,
+                            paneForDistributionTime,
+                            spinnerNormTimeMat,
+                            spinnerNormTimeDis,
+                            spinnerStartTime,
+                            spinnerEndTime,
+                            spinnerIntensityTime,
                             LAYOUT_X_LEFT_PANE,
                             LAYOUT_X_RIGHT_PANE,
                             "времени"
@@ -428,12 +479,12 @@ public class SettingsScene {
                 comboBoxAccidentalSpeed.setOnAction(event2 -> {
                     selectionOfDistribution(
                             comboBoxAccidentalSpeed,
-                            paneAccidentalDistribution,
-                            textFieldNormSpeedMat,
-                            textFieldNormSpeedDis,
-                            textFieldStartSpeed,
-                            textFieldEndSpeed,
-                            textFieldIntensitySpeed,
+                            paneForDistributionSpeed,
+                            spinnerNormSpeedMat,
+                            spinnerNormSpeedDis,
+                            spinnerStartSpeed,
+                            spinnerEndSpeed,
+                            spinnerIntensitySpeed,
                             LAYOUT_X_RIGHT_PANE,
                             LAYOUT_X_LEFT_PANE,
                             "скорости"
@@ -447,11 +498,11 @@ public class SettingsScene {
     private void selectionOfDistribution(
             ComboBox<String> comboBox,
             Pane paneAccidentalDistribution,
-            TextField textFieldNormMat,
-            TextField textFieldNormDis,
-            TextField textFieldStart,
-            TextField textFieldEnd,
-            TextField textFieldIntensity,
+            Spinner<Integer> spinnerNormMat,
+            Spinner<Integer> spinnerNormDis,
+            Spinner<Integer> spinnerStart,
+            Spinner<Integer> spinnerEnd,
+            Spinner<Integer> spinnerIntensity,
             int ourLayoutX,
             int noOurLayoutX,
             String magnitude
@@ -467,50 +518,38 @@ public class SettingsScene {
                         "Мат. ожидание для " + magnitude,
                         "Дисперсия для " + magnitude,
                         ourLayoutX,
-                        textFieldNormMat,
-                        textFieldNormDis
+                        spinnerNormMat,
+                        spinnerNormDis
                 );
                 break;
             case UNIFORM:
                 checkingAndDeletingChildPanel(paneAccidentalDistribution, noOurLayoutX, ourLayoutX);
                 uniform(
                         paneAccidentalDistribution,
-                        "Минимальное значение Мат. ожидания для " + magnitude,
-                        "Максимальное значение Мат. ожидания для " + magnitude,
+                        "Минимальное значение " + magnitude,
+                        "Максимальное значение " + magnitude,
                         ourLayoutX,
-                        textFieldStart,
-                        textFieldEnd
+                        spinnerStart,
+                        spinnerEnd
                 );
                 break;
             case EXPONENTIAL:
                 checkingAndDeletingChildPanel(paneAccidentalDistribution, noOurLayoutX, ourLayoutX);
                 exponential(
                         paneAccidentalDistribution,
-                        ourLayoutX == 100 ? "Количество автомобилей в минуту \n" :
-                                "Среднее расстояние между машинами за \n" +
-                                        "одинаковый промежуток времени",
+                        ourLayoutX == 100 ? "Количество автомобилей в минуту \n " :
+                                "Среднее расстояние проходимое машинами\n" +
+                                        "за одинаковый промежуток времени",
                         ourLayoutX,
-                        textFieldIntensity
+                        spinnerIntensity
                 );
                 break;
         }
     }
 
     private void checkingAndDeletingChildPanel(Pane paneAccidentalDistribution, int noOurLayoutX, int ourLayoutX) {
-        int endNumberElement = 7;
-        int preEndNumberElement = 6;
-        if (road instanceof Highway) {
-            ++endNumberElement;
-            ++preEndNumberElement;
-        }
-        if (paneAccidentalDistribution.getChildren().size() > endNumberElement) {
-            if (paneAccidentalDistribution.getChildren().get(endNumberElement).getLayoutX() == noOurLayoutX) {
-                paneAccidentalDistribution.getChildren().remove(preEndNumberElement);
-            } else {
-                if (paneAccidentalDistribution.getChildren().get(endNumberElement).getLayoutX() == ourLayoutX) {
-                    paneAccidentalDistribution.getChildren().remove(endNumberElement);
-                }
-            }
+        if (paneAccidentalDistribution.getChildren().size() > 2) {
+            paneAccidentalDistribution.getChildren().remove(2);
         }
     }
 }

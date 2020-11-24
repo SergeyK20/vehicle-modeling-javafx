@@ -9,7 +9,6 @@ import main.java.model.BuilderRoad;
 import main.java.model.Transport;
 import main.java.view.GenericSceneTunnel;
 
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -56,7 +55,6 @@ public class ControllerGenericAuto implements Runnable {
     }
 
     private void startMod() {
-
         double speed;
         long times = 0L;
         while (!flagClose) {
@@ -84,14 +82,14 @@ public class ControllerGenericAuto implements Runnable {
                 // следит за тем, чтобы модели не создавались друг на друге
                 try {
                     if (fromX == -100) {
-                        while (index != 0 && findById(index - 1).getTranslateX() <= 0) {
+                            while (index != 0 && findById(index - 1).getTranslateX() <= 0) {
 
-                        }
-                    } else {
-                        while (index != 0 && findById(index - 1).getTranslateX() >= 900) {
+                            }
+                        } else {
+                            while (index != 0 && findById(index - 1).getTranslateX() >= 900) {
 
+                            }
                         }
-                    }
                 } catch (NullPointerException e) {
                     System.out.println("Ошибка пр соблюдении дистанции...");
                 }
@@ -101,9 +99,6 @@ public class ControllerGenericAuto implements Runnable {
                 tt.setToX(toX);
                 //установка скорости
                 speed = road.getSpeed().getSpeed();
-                /*testList.add(speed);*/
-                //System.out.println("speed " + speed);
-                //System.out.println("times " + times);
                 tt.setRate(speed / 2000.0);
                 //создание новой машины
                 Transport transport = new Transport(index++, tt);
@@ -139,21 +134,15 @@ public class ControllerGenericAuto implements Runnable {
 
                 //дейсвие перед окончанием анимации машины
                 transport.getAnimation().setOnFinished(event -> {
-                   /* if(fromX == -100) {
-                        System.out.println(list.remove(Long.toString(((Transport) tt.getNode()).getIdNode())).getIdNode() + " Удален");
-                    } else {
-                    System.out.println(list.remove(Long.toString(((Transport) tt.getNode()).getIdNode())).getIdNode() + " Удален");
-                        list.remove(Long.toString(((Transport) tt.getNode()).getIdNode()));
-                    }*/
                     if (transport.getTranslateX() == 1000.0 || transport.getTranslateX() == -100.0) {
                         try {
                             list.remove(transport);
                         } catch (NullPointerException e) {
-                            //
+                            e.printStackTrace();
                         }
-                        //pane.getChildren().remove(tt.getNode());
+                        Platform.runLater(() -> pane.getChildren().remove(transport));
                     }
-                    if (tt.getStatus() == Animation.Status.STOPPED && !(tt.getNode().getTranslateX() == 1000.0 || tt.getNode().getTranslateX() == -100.0)) {
+                    if (transport.getAnimation().getStatus() == Animation.Status.STOPPED && !(transport.getAnimation().getNode().getTranslateX() == 1000.0 || transport.getAnimation().getNode().getTranslateX() == -100.0)) {
                         System.out.println("index before: " + index);
                         --index;
                         System.out.println("index after: " + index);
@@ -202,7 +191,9 @@ public class ControllerGenericAuto implements Runnable {
     }
 
     public void setIncrementIndex() {
-        index++;
+        System.out.println("До" + index);
+        ++index;
+        System.out.println("После" + index);
     }
 
     public void setDecrementIndex() {

@@ -6,7 +6,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import main.java.controller.ControllerStartScene;
 import main.java.model.BuilderRoad;
 import main.java.model.Highway;
@@ -23,6 +25,7 @@ public class StartScene {
 
     public StartScene(Stage stage) {
         this.stage = stage;
+        stage.initStyle(StageStyle.UTILITY);
     }
 
     public void start() {
@@ -43,30 +46,25 @@ public class StartScene {
             alert.showAndWait();
         });
 
-        Button close = new Button("Выход");
-        close.setMinSize(100, 25);
-        close.setLayoutX(700);
-        close.setLayoutY(550);
-        close.setOnAction(actionEvent -> {
-            System.exit(0);
-        });
+
 
         Label labelHello = new Label("Добро пожаловать!");
-        labelHello.setLayoutY(200);
-        labelHello.setLayoutX(270);
+        labelHello.setLayoutY(70);
+        labelHello.setLayoutX(100);
         labelHello.setFont(new Font("Aria", 30));
 
         Pane paneStart = new Pane();
 
+
         simulationSettings = new Button("Ок");
-        simulationSettings.setLayoutX(350);
-        simulationSettings.setLayoutY(450);
+        simulationSettings.setLayoutX(170);
+        simulationSettings.setLayoutY(245);
         simulationSettings.setMinSize(115, 25);
 
         ObservableList<String> listRoad = FXCollections.observableArrayList("Тоннель", "Автодорога");
         ComboBox<String> comboBox = new ComboBox<String>(listRoad);
-        comboBox.setLayoutX(350);
-        comboBox.setLayoutY(350);
+        comboBox.setLayoutX(170);
+        comboBox.setLayoutY(165);
         comboBox.setMinSize(100, 25);
 
         if (road == null || road instanceof Tunnel) {
@@ -76,8 +74,9 @@ public class StartScene {
         }
 
 
-        Scene sceneStart = new Scene(paneStart, 800, 600);
-        paneStart.getChildren().addAll(simulationSettings, menuDirectory, comboBox, close, labelHello);
+        Scene sceneStart = new Scene(paneStart, 450, 300);
+
+        paneStart.getChildren().addAll(simulationSettings, menuDirectory, comboBox, labelHello);
 
 
         simulationSettings.setOnMousePressed(event -> {
@@ -89,7 +88,11 @@ public class StartScene {
             simulationSettings.setOnAction(new ControllerStartScene(stage, road, this));
         });
 
-        stage.centerOnScreen();
+        stage.setTitle("Моделирование движения автомобилей");
+
+
+        stage.setX((Screen.getPrimary().getBounds().getMaxX() - 450.0) / 2.0);
+        stage.setY((Screen.getPrimary().getBounds().getMaxY() - 300) / 2.0);
         stage.setResizable(false);
         stage.setScene(sceneStart);
         stage.show();

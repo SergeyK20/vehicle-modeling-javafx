@@ -4,6 +4,7 @@ import javafx.animation.*;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.util.Duration;
 import main.java.model.BuilderRoad;
 import main.java.model.ControlOneRoad;
 import main.java.model.Transport;
@@ -179,7 +180,7 @@ public class ControllerLogicAuto implements Runnable {
                 }*//*
             } else {
                 if (!beforeTransport.isOvertaking()) {*/
-                    transport.getAnimation().setRate(beforeTransport.getAnimation().getRate());
+            transport.getAnimation().setRate(beforeTransport.getAnimation().getRate());
                 /*} else {
                     transport.getAnimation().setRate(beforeTransport.getAnimation().getRate() / (1100 / (1100 - beforeTransport.getAnimation().getFromX())));
                 }
@@ -195,7 +196,7 @@ public class ControllerLogicAuto implements Runnable {
                 listOfScannedAuto.sort(new Comparator<Transport>() {
                     @Override
                     public int compare(Transport o1, Transport o2) {
-                        return (int) (o1.getIdNode() - o2.getIdNode());
+                        return (int)(o1.getIdNode() - o2.getIdNode());
                     }
                 });
 
@@ -211,7 +212,7 @@ public class ControllerLogicAuto implements Runnable {
                                         //System.out.println("Хочу обогнать...");
                                         //получаю список машин на левой дороге от меня
                                         CopyOnWriteArrayList<Transport> listLeftRoad = listOfRoads.get(numberInListRoads - 1);
-                                        if (isCanMove(listOfScannedAuto.get(i).getTranslateX(), listLeftRoad)) {
+                                        /*if (isCanMove(listOfScannedAuto.get(i).getTranslateX(), listLeftRoad)) {*/
                                             if ((id = idToGoFor(listOfScannedAuto.get(i).getTranslateX(), listLeftRoad)) > -1) {
                                                 //удаляем из транспорт из главной дороги
                                                 Transport transport = listOfScannedAuto.get(i);
@@ -225,7 +226,7 @@ public class ControllerLogicAuto implements Runnable {
                                                 double speed = transport.getAnimation().getRate();
                                                 PathTransition pathTransition = new PathTransition();
                                                 pathTransition.setPath(new Path(new MoveTo(transport.getTranslateX(), transport.getTranslateY()),
-                                                        new LineTo(transport.getTranslateX() + 70, transport.getTranslateY() - 68)));
+                                                        new LineTo(transport.getTranslateX() + 70, transport.getTranslateY() - 60)));
                                                 pathTransition.setRate(1);
                                                 transport.setRotate(-45.0);
                                                 transport.getAnimation().stop();
@@ -234,7 +235,7 @@ public class ControllerLogicAuto implements Runnable {
                                                 pathTransition.play();
 
 
-
+                                                long finalId = id;
                                                 pathTransition.setOnFinished(actionEvent -> {
                                                     System.out.println("Обгон завершен, продолжаю движение...");
                                                     TranslateTransition translateTransition = new TranslateTransition();
@@ -250,56 +251,31 @@ public class ControllerLogicAuto implements Runnable {
                                                     transport.setAnimation(translateTransition);
                                                     transport.getAnimation().play();
 
+                                                    //изменяем id машин, которые будут ехать после нее
+                                                    for (Transport element : listLeftRoad) {
+                                                        long idLong = 0;
+                                                        if (finalId <= (idLong = element.getIdNode())) {
+                                                            listLeftRoad.remove(element);
+                                                            element.setIdNode(++idLong);
+                                                            listLeftRoad.add(element);
+                                                        }
+                                                    }
+
+                                                    listControlTheRoadSingleDirection.get(0).getControllerGenericAuto().setIncrementIndex();
+                                                    transport.setOvertaking(true);
+                                                    //добавляем ее в список машин из другой дороги
+                                                    listLeftRoad.add(transport);
+
                                                     translateTransition.setOnFinished(actionEvent1 -> {
                                                         listLeftRoad.remove(transport);
                                                     });
                                                 });
-
-                                                System.out.println(id);
-                                                for(Transport element : listLeftRoad){
-                                                    System.out.print(element.getIdNode()  + " ");
-                                                }
-
-
-                                                //изменяем id машин, которые будут ехать после нее
-                                                for(Transport element : listLeftRoad){
-                                                    long idLong = 0;
-                                                    if(id <= (idLong = element.getIdNode()) ){
-                                                        listLeftRoad.remove(element);
-                                                        element.setIdNode(++idLong);
-                                                        listLeftRoad.add(element);
-                                                    }
-                                                }
-
-                                                listControlTheRoadSingleDirection.get(0).getControllerGenericAuto().setIncrementIndex();
-                                                transport.setOvertaking(true);
-
-                                                System.out.println();
-                                                for(Transport element : listLeftRoad){
-                                                    System.out.print(element.getIdNode()  + " ");
-                                                }
-
-                                                //добавляем ее в список машин из другой дороги
-                                                listLeftRoad.add(transport);
-
-                                                System.out.println();
-                                                for(Transport element : listLeftRoad){
-                                                    System.out.print(element.getIdNode()  + " ");
-                                                }
-
-                                                System.out.println();
-
                                             } else {
                                                 universalLogicOfMovementInOneLine(listOfScannedAuto.get(i), i - 1);
                                             }
-                                        } else {
-                                            universalLogicOfMovementInOneLine(listOfScannedAuto.get(i), i - 1);
-                                        }
                                     } else {
-                                        //universalLogicOfMovementInOneLine(listOfScannedAuto.get(i), i - 1);
-                                        if(isRightRoad){
+                                        if (isRightRoad) {
                                             CopyOnWriteArrayList<Transport> listRightRoad = listOfRoads.get(numberInListRoads + 1);
-                                            if (isCanMove(listOfScannedAuto.get(i).getTranslateX(), listRightRoad)) {
                                                 if ((id = idToGoFor(listOfScannedAuto.get(i).getTranslateX(), listRightRoad)) > -1) {
                                                     //удаляем из транспорт из главной дороги
                                                     Transport transport = listOfScannedAuto.get(i);
@@ -313,16 +289,14 @@ public class ControllerLogicAuto implements Runnable {
                                                     double speed = transport.getAnimation().getRate();
                                                     PathTransition pathTransition = new PathTransition();
                                                     pathTransition.setPath(new Path(new MoveTo(transport.getTranslateX(), transport.getTranslateY()),
-                                                            new LineTo(transport.getTranslateX() + 70, transport.getTranslateY() + 100)));
+                                                            new LineTo(transport.getTranslateX() + 70, transport.getTranslateY() + 110)));
                                                     pathTransition.setRate(1);
                                                     transport.setRotate(45.0);
-                                                    transport.getAnimation().stop();
                                                     pathTransition.setNode(transport);
-
+                                                    transport.getAnimation().stop();
                                                     pathTransition.play();
 
-
-
+                                                    long finalId1 = id;
                                                     pathTransition.setOnFinished(actionEvent -> {
                                                         System.out.println("Обгон завершен, продолжаю движение...");
                                                         TranslateTransition translateTransition = new TranslateTransition();
@@ -338,51 +312,32 @@ public class ControllerLogicAuto implements Runnable {
                                                         transport.setAnimation(translateTransition);
                                                         transport.getAnimation().play();
 
+                                                        //изменяем id машин, которые будут ехать после нее
+                                                        for (Transport element : listRightRoad) {
+                                                            long idLong = 0;
+                                                            if (finalId1 <= (idLong = element.getIdNode())) {
+                                                                listRightRoad.remove(element);
+                                                                element.setIdNode(++idLong);
+                                                                listRightRoad.add(element);
+                                                            }
+                                                        }
+
+                                                        listControlTheRoadSingleDirection.get(1).getControllerGenericAuto().setIncrementIndex();
+                                                        transport.setOvertaking(true);
+
+                                                        //добавляем ее в список машин из другой дороги
+                                                        listRightRoad.add(transport);
+
                                                         translateTransition.setOnFinished(actionEvent1 -> {
                                                             listRightRoad.remove(transport);
                                                         });
                                                     });
-
-                                                    System.out.println(id);
-                                                    for(Transport element : listRightRoad){
-                                                        System.out.print(element.getIdNode()  + " ");
-                                                    }
-
-
-                                                    //изменяем id машин, которые будут ехать после нее
-                                                    for(Transport element : listRightRoad){
-                                                        long idLong = 0;
-                                                        if(id <= (idLong = element.getIdNode()) ){
-                                                            listRightRoad.remove(element);
-                                                            element.setIdNode(++idLong);
-                                                            listRightRoad.add(element);
-                                                        }
-                                                    }
-
-                                                    listControlTheRoadSingleDirection.get(0).getControllerGenericAuto().setIncrementIndex();
-                                                    transport.setOvertaking(true);
-
-                                                    System.out.println();
-                                                    for(Transport element : listRightRoad){
-                                                        System.out.print(element.getIdNode()  + " ");
-                                                    }
-
-                                                    //добавляем ее в список машин из другой дороги
-                                                    listRightRoad.add(transport);
-
-                                                    System.out.println();
-                                                    for(Transport element : listRightRoad){
-                                                        System.out.print(element.getIdNode()  + " ");
-                                                    }
-
-                                                    System.out.println();
-
                                                 } else {
                                                     universalLogicOfMovementInOneLine(listOfScannedAuto.get(i), i - 1);
                                                 }
-                                            } else {
+                                            /*} else {
                                                 universalLogicOfMovementInOneLine(listOfScannedAuto.get(i), i - 1);
-                                            }
+                                            }*/
                                         }
                                     }
                                 }
@@ -396,18 +351,18 @@ public class ControllerLogicAuto implements Runnable {
         }
     }
 
-    private boolean isCanMove(double translateX, CopyOnWriteArrayList<Transport> list) {
+    /*private boolean isCanMove(double translateX, CopyOnWriteArrayList<Transport> list) {
         for (int i = 1; i < list.size(); i++) {
-            if ((list.get(i).getTranslateX() < (translateX - 40)) && list.get(i - 1).getTranslateX() > (translateX + 120)) {
+            if ((list.get(i).getTranslateX() < (translateX - 70)) && list.get(i - 1).getTranslateX() > (translateX + 120)) {
                 return true;
             }
         }
         return false;
-    }
+    }*/
 
     private long idToGoFor(double translateX, CopyOnWriteArrayList<Transport> list) {
         for (int i = 1; i < list.size(); i++) {
-            if ((list.get(i).getTranslateX() < (translateX - 30)) && (list.get(i - 1).getTranslateX() > (translateX + 120))) {
+            if ((list.get(i).getTranslateX() < (translateX - 70)) && (list.get(i - 1).getTranslateX() > (translateX + 120))) {
                 return list.get(i).getIdNode();
             }
         }
