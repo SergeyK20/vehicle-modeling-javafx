@@ -29,7 +29,7 @@ public class StartScene {
     }
 
     public void start() {
-        Button menuDirectory = new Button("Справочник");
+        Button menuDirectory = new Button("Справка");
         menuDirectory.setLayoutY(0);
         menuDirectory.setLayoutX(0);
         menuDirectory.setMinSize(100, 25);
@@ -37,12 +37,20 @@ public class StartScene {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setHeaderText("Информация о программе");
-            alert.setContentText("Программа моделирующая движение автомобилей." +
-                    "Доступно два режима дороги на каждой дороге можно выбирать" +
-                    "способ генерирования автомобилей и их скоростей." +
-                    "Работу сделали: \n" +
-                    "Кашкинов Сергей \n" +
-                    "Балаев Рафаил");
+            alert.setContentText(
+                    "Лабораторный практикум по дисциплине: \n" +
+                    "       \" Технологии программирования \"\n" +
+                    "Тема: " +
+                            "\"Система моделирования движения транспорта\n" +
+                    "                  в тоннеле и на автостраде\"\n" +
+                            "\n" +
+                    "Разработчики:\n" +
+                    "   Студенты группы 6404:\n" +
+                    "   Кашкинов Сергей \n" +
+                    "   Балаев Рафаил\n" +
+                    "Руководитель:\n" +
+                    "   Зеленко Лариса Сергеевна\n" +
+                    "               Самарский университет 2020");
             alert.showAndWait();
         });
 
