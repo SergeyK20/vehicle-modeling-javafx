@@ -23,7 +23,7 @@ public class Background {
                         BackgroundPosition.CENTER,
                         new BackgroundSize(
                                 800,
-                                600,
+                                300,
                                 false,
                                 false,
                                 false,
@@ -43,7 +43,7 @@ public class Background {
                         BackgroundPosition.CENTER,
                         new BackgroundSize(
                                 800,
-                                600,
+                                 n == 1 ? 400 : (n == 2 ? 500 : 600),
                                 false,
                                 false,
                                 false,
@@ -76,14 +76,14 @@ public class Background {
         if (road instanceof Highway) {
             switch (countRoad) {
                 case 1:
-                    listFromY.add(200);
-                    listFromY.add(295);
+                    listFromY.add(130);
+                    listFromY.add(195);
                     break;
                 case 2:
-                    listFromY.add(120);
-                    listFromY.add(210);
-                    listFromY.add(295);
-                    listFromY.add(375);
+                    listFromY.add(95);
+                    listFromY.add(170);
+                    listFromY.add(250);
+                    listFromY.add(320);
                     break;
                 case 3:
                     listFromY.add(35);
@@ -96,8 +96,26 @@ public class Background {
                 default:
             }
         } else {
-            listFromY.add(300);
+            listFromY.add(120);
         }
         return listFromY;
     }
+
+    public int getHeightY() {
+        if (road instanceof Highway) {
+            switch (countRoad) {
+                case 1:
+                    return 400;
+                case 2:
+                    return 500;
+                case 3:
+                    return 600;
+                default:
+                    return 0;
+            }
+        } else {
+            return 300;
+        }
+    }
+
 }

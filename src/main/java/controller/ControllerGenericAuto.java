@@ -111,9 +111,11 @@ public class ControllerGenericAuto implements Runnable {
                 list.add(transport);
 
                 //добавляет новую модель на сцену
-                Platform.runLater(() -> {
-                    pane.getChildren().add(transport);
-                });
+                if(transport.getAnimation() != null) {
+                    Platform.runLater(() -> {
+                        pane.getChildren().add(transport);
+                    });
+                }
 
 
                 //время создания новой машины (нужна, если будет пауза)
@@ -144,7 +146,7 @@ public class ControllerGenericAuto implements Runnable {
                     }
                     if (transport.getAnimation().getStatus() == Animation.Status.STOPPED && !(transport.getAnimation().getNode().getTranslateX() == 1000.0 || transport.getAnimation().getNode().getTranslateX() == -100.0)) {
                         System.out.println("index before: " + index);
-                        --index;
+                        /*--index;*/
                         System.out.println("index after: " + index);
                     }
                 });

@@ -4,18 +4,13 @@ import javafx.animation.*;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
-import javafx.util.Duration;
 import main.java.model.BuilderRoad;
 import main.java.model.ControlOneRoad;
 import main.java.model.Transport;
 import main.java.model.Tunnel;
 
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ControllerLogicAuto implements Runnable {
@@ -65,7 +60,8 @@ public class ControllerLogicAuto implements Runnable {
                         } else {
                             isRightRoad = true;
                         }
-                        logicalForSingleLineTrafficFromRightToLeft();
+                        logicalForDoubleLineTrafficFromRightToLeft();
+                        /*logicalForSingleLineTrafficFromRightToLeft();*/
                     }
                     break;
                 case 3:
@@ -127,12 +123,7 @@ public class ControllerLogicAuto implements Runnable {
     private void logicalForSingleLineTrafficFromRightToLeft() {
         while (!isClose) {
             if (listOfScannedAuto != null) {
-                listOfScannedAuto.sort(new Comparator<Transport>() {
-                    @Override
-                    public int compare(Transport o1, Transport o2) {
-                        return (int) (o1.getIdNode() - o2.getIdNode());
-                    }
-                });
+                listOfScannedAuto.sort((o1, o2) -> (int) (o1.getIdNode() - o2.getIdNode()));
                 for (int i = 1; i < listOfScannedAuto.size(); i++) {
                     try {
                         if (listOfScannedAuto.get(i).getIdNode() != 0) {
@@ -165,41 +156,14 @@ public class ControllerLogicAuto implements Runnable {
                 transport.getAnimation().play();
             }
             //если обогнал
-           /* if(transport.isOvertaking()){
-                //если приближаемся к тому кто не обгонял
-                if(!beforeTransport.isOvertaking()) {
-                    transport.getAnimation().setRate(beforeTransport.getAnimation().getRate() * (1100 / (900 - transport.getAnimation().getFromX())));
-                } //если приближаемся к тому кто обгонял
-               *//* else {
-                    transport.getAnimation().setRate(beforeTransport.getAnimation().getRate() *
-                            ((beforeTransport.getAnimation().getToX() - beforeTransport.getAnimation().getFromX())
-                                    /
-                                    ()
-
-                            );
-                }*//*
-            } else {
-                if (!beforeTransport.isOvertaking()) {*/
             transport.getAnimation().setRate(beforeTransport.getAnimation().getRate());
-                /*} else {
-                    transport.getAnimation().setRate(beforeTransport.getAnimation().getRate() / (1100 / (1100 - beforeTransport.getAnimation().getFromX())));
-                }
-            }*/
-
         }
     }
 
     private void logicalForDoubleLineTrafficFromLeftToRight() {
-        long id;
         while (!isClose) {
             if (listOfScannedAuto != null) {
-                listOfScannedAuto.sort(new Comparator<Transport>() {
-                    @Override
-                    public int compare(Transport o1, Transport o2) {
-                        return (int)(o1.getIdNode() - o2.getIdNode());
-                    }
-                });
-
+                listOfScannedAuto.sort((o1, o2) -> (int) (o1.getIdNode() - o2.getIdNode()));
                 for (int i = 1; i < listOfScannedAuto.size(); i++) {
                     try {
                         if (listOfScannedAuto.get(i).getIdNode() != 0) {
@@ -209,135 +173,28 @@ public class ControllerLogicAuto implements Runnable {
                                         listOfScannedAuto.get(i - 1).getTranslateX() - 70)
                                 ) {
                                     if (isLeftRoad) {
-                                        //System.out.println("Хочу обогнать...");
                                         //получаю список машин на левой дороге от меня
                                         CopyOnWriteArrayList<Transport> listLeftRoad = listOfRoads.get(numberInListRoads - 1);
-                                        /*if (isCanMove(listOfScannedAuto.get(i).getTranslateX(), listLeftRoad)) {*/
-                                            if ((id = idToGoFor(listOfScannedAuto.get(i).getTranslateX(), listLeftRoad)) > -1) {
-                                                //удаляем из транспорт из главной дороги
-                                                Transport transport = listOfScannedAuto.get(i);
-                                                listOfScannedAuto.remove(i);
-
-                                                //изменяем id машины, которая обгоняет
-                                                transport.setIdNode(id);
-
-                                                System.out.println("Обгоняю...");
-                                                //animation
-                                                double speed = transport.getAnimation().getRate();
-                                                PathTransition pathTransition = new PathTransition();
-                                                pathTransition.setPath(new Path(new MoveTo(transport.getTranslateX(), transport.getTranslateY()),
-                                                        new LineTo(transport.getTranslateX() + 70, transport.getTranslateY() - 60)));
-                                                pathTransition.setRate(1);
-                                                transport.setRotate(-45.0);
-                                                transport.getAnimation().stop();
-                                                pathTransition.setNode(transport);
-
-                                                pathTransition.play();
-
-
-                                                long finalId = id;
-                                                pathTransition.setOnFinished(actionEvent -> {
-                                                    System.out.println("Обгон завершен, продолжаю движение...");
-                                                    TranslateTransition translateTransition = new TranslateTransition();
-                                                    transport.setRotate(0);
-                                                    translateTransition.setFromY(transport.getTranslateY());
-                                                    translateTransition.setFromX(transport.getTranslateX());
-                                                    translateTransition.setToX(1100 + translateTransition.getFromX());
-                                                    translateTransition.setRate(speed);
-                                                    translateTransition.setNode(transport);
-                                                    translateTransition.setCycleCount(1);
-                                                    translateTransition.setInterpolator(Interpolator.LINEAR);
-
-                                                    transport.setAnimation(translateTransition);
-                                                    transport.getAnimation().play();
-
-                                                    //изменяем id машин, которые будут ехать после нее
-                                                    for (Transport element : listLeftRoad) {
-                                                        long idLong = 0;
-                                                        if (finalId <= (idLong = element.getIdNode())) {
-                                                            listLeftRoad.remove(element);
-                                                            element.setIdNode(++idLong);
-                                                            listLeftRoad.add(element);
-                                                        }
-                                                    }
-
-                                                    listControlTheRoadSingleDirection.get(0).getControllerGenericAuto().setIncrementIndex();
-                                                    transport.setOvertaking(true);
-                                                    //добавляем ее в список машин из другой дороги
-                                                    listLeftRoad.add(transport);
-
-                                                    translateTransition.setOnFinished(actionEvent1 -> {
-                                                        listLeftRoad.remove(transport);
-                                                    });
-                                                });
-                                            } else {
-                                                universalLogicOfMovementInOneLine(listOfScannedAuto.get(i), i - 1);
-                                            }
+                                        overtakingFromLeftToRight(i, listLeftRoad, numberInListRoads - 1,
+                                                100,
+                                                -55,
+                                                -45.0,
+                                                1100,
+                                                0,
+                                                -70,
+                                                120);
                                     } else {
                                         if (isRightRoad) {
                                             CopyOnWriteArrayList<Transport> listRightRoad = listOfRoads.get(numberInListRoads + 1);
-                                                if ((id = idToGoFor(listOfScannedAuto.get(i).getTranslateX(), listRightRoad)) > -1) {
-                                                    //удаляем из транспорт из главной дороги
-                                                    Transport transport = listOfScannedAuto.get(i);
-                                                    listOfScannedAuto.remove(i);
-
-                                                    //изменяем id машины, которая обгоняет
-                                                    transport.setIdNode(id);
-
-                                                    System.out.println("Обгоняю...");
-                                                    //animation
-                                                    double speed = transport.getAnimation().getRate();
-                                                    PathTransition pathTransition = new PathTransition();
-                                                    pathTransition.setPath(new Path(new MoveTo(transport.getTranslateX(), transport.getTranslateY()),
-                                                            new LineTo(transport.getTranslateX() + 70, transport.getTranslateY() + 110)));
-                                                    pathTransition.setRate(1);
-                                                    transport.setRotate(45.0);
-                                                    pathTransition.setNode(transport);
-                                                    transport.getAnimation().stop();
-                                                    pathTransition.play();
-
-                                                    long finalId1 = id;
-                                                    pathTransition.setOnFinished(actionEvent -> {
-                                                        System.out.println("Обгон завершен, продолжаю движение...");
-                                                        TranslateTransition translateTransition = new TranslateTransition();
-                                                        transport.setRotate(0);
-                                                        translateTransition.setFromY(transport.getTranslateY());
-                                                        translateTransition.setFromX(transport.getTranslateX());
-                                                        translateTransition.setToX(1100 + translateTransition.getFromX());
-                                                        translateTransition.setRate(speed);
-                                                        translateTransition.setNode(transport);
-                                                        translateTransition.setCycleCount(1);
-                                                        translateTransition.setInterpolator(Interpolator.LINEAR);
-
-                                                        transport.setAnimation(translateTransition);
-                                                        transport.getAnimation().play();
-
-                                                        //изменяем id машин, которые будут ехать после нее
-                                                        for (Transport element : listRightRoad) {
-                                                            long idLong = 0;
-                                                            if (finalId1 <= (idLong = element.getIdNode())) {
-                                                                listRightRoad.remove(element);
-                                                                element.setIdNode(++idLong);
-                                                                listRightRoad.add(element);
-                                                            }
-                                                        }
-
-                                                        listControlTheRoadSingleDirection.get(1).getControllerGenericAuto().setIncrementIndex();
-                                                        transport.setOvertaking(true);
-
-                                                        //добавляем ее в список машин из другой дороги
-                                                        listRightRoad.add(transport);
-
-                                                        translateTransition.setOnFinished(actionEvent1 -> {
-                                                            listRightRoad.remove(transport);
-                                                        });
-                                                    });
-                                                } else {
-                                                    universalLogicOfMovementInOneLine(listOfScannedAuto.get(i), i - 1);
-                                                }
-                                            /*} else {
-                                                universalLogicOfMovementInOneLine(listOfScannedAuto.get(i), i - 1);
-                                            }*/
+                                            overtakingFromLeftToRight(i, listRightRoad,
+                                                    numberInListRoads + 1,
+                                                    100,
+                                                    95,
+                                                    45.0,
+                                                    1100,
+                                                    0,
+                                                    -70,
+                                                    120);
                                         }
                                     }
                                 }
@@ -351,18 +208,132 @@ public class ControllerLogicAuto implements Runnable {
         }
     }
 
-    /*private boolean isCanMove(double translateX, CopyOnWriteArrayList<Transport> list) {
-        for (int i = 1; i < list.size(); i++) {
-            if ((list.get(i).getTranslateX() < (translateX - 70)) && list.get(i - 1).getTranslateX() > (translateX + 120)) {
-                return true;
+    private void logicalForDoubleLineTrafficFromRightToLeft() {
+        while (!isClose) {
+            if (listOfScannedAuto != null) {
+                listOfScannedAuto.sort((o1, o2) -> (int) (o1.getIdNode() - o2.getIdNode()));
+
+                for (int i = 1; i < listOfScannedAuto.size(); i++) {
+                    try {
+                        if (listOfScannedAuto.get(i).getIdNode() != 0) {
+                            if (listOfScannedAuto.get(i).getTranslateX() != 1000.0) {
+                                if (listOfScannedAuto.get(i).getTranslateX() <= (listOfScannedAuto.get(i - 1).getTranslateX() > 900 ?
+                                        listOfScannedAuto.get(i - 1).getTranslateX() - 70 :
+                                        listOfScannedAuto.get(i - 1).getTranslateX() + 70)
+                                ) {
+                                    if (isLeftRoad) {
+                                        //получаю список машин на левой дороге от меня
+                                        CopyOnWriteArrayList<Transport> listLeftRoad = listOfRoads.get(numberInListRoads + 1);
+                                        overtakingFromLeftToRight(i, listLeftRoad,
+                                                numberInListRoads + 1,
+                                                -100,
+                                                95,
+                                                -225.0,
+                                                -1100,
+                                                -180,
+                                                70,
+                                                -120);
+                                    }
+                                    if (isRightRoad) {
+                                        CopyOnWriteArrayList<Transport> listRightRoad = listOfRoads.get(numberInListRoads - 1);
+                                        overtakingFromLeftToRight(i,
+                                                listRightRoad,
+                                                numberInListRoads - 1,
+                                                -100,
+                                                -55,
+                                                -135.0,
+                                                -1100,
+                                                -180,
+                                                70,
+                                                -120);
+                                    }
+
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        //System.out.println(e.getMessage());
+                    }
+                }
             }
         }
-        return false;
-    }*/
+    }
 
-    private long idToGoFor(double translateX, CopyOnWriteArrayList<Transport> list) {
+    private void overtakingFromLeftToRight(int index,
+                                           CopyOnWriteArrayList<Transport> listNeighborRoad,
+                                           int indexNeighborRoad,
+                                           int updateTranslateX,
+                                           int updateTranslateY,
+                                           double rotate,
+                                           int toX,
+                                           double rotateTwo,
+                                           int distanceToThePast,
+                                           int distanceToTheNext) {
+
+        long id;
+        if ((id = idToGoFor(listOfScannedAuto.get(index).getTranslateX(), listNeighborRoad, distanceToThePast, distanceToTheNext)) > -1) {
+            //удаляем из транспорт из главной дороги
+            Transport transport = listOfScannedAuto.get(index);
+            listOfScannedAuto.remove(index);
+
+            //изменяем id машины, которая обгоняет
+            transport.setIdNode(id);
+
+            System.out.println("Обгоняю...");
+            //animation
+            double speed = transport.getAnimation().getRate();
+            PathTransition pathTransition = new PathTransition();
+            pathTransition.setPath(new Path(new MoveTo(transport.getTranslateX(), transport.getTranslateY()),
+                    new LineTo(transport.getTranslateX() + updateTranslateX, transport.getTranslateY() + updateTranslateY)));
+            pathTransition.setRate(1);
+            transport.setRotate(rotate);
+            transport.getAnimation().stop();
+            pathTransition.setNode(transport);
+
+            pathTransition.play();
+
+            pathTransition.setOnFinished(actionEvent -> {
+                System.out.println("Обгон завершен, продолжаю движение...");
+                TranslateTransition translateTransition = new TranslateTransition();
+                transport.setRotate(rotateTwo);
+                translateTransition.setFromY(transport.getTranslateY());
+                translateTransition.setFromX(transport.getTranslateX());
+                translateTransition.setToX(translateTransition.getFromX() + toX);
+                translateTransition.setRate(speed);
+                translateTransition.setNode(transport);
+                translateTransition.setCycleCount(1);
+                translateTransition.setInterpolator(Interpolator.LINEAR);
+
+                transport.setAnimation(translateTransition);
+                transport.getAnimation().play();
+
+                //изменяем id машин, которые будут ехать после нее
+                for (Transport element : listNeighborRoad) {
+                    long idLong;
+                    if (id <= (idLong = element.getIdNode())) {
+                        listNeighborRoad.remove(element);
+                        element.setIdNode(++idLong);
+                        listNeighborRoad.add(element);
+                    }
+                }
+
+                listControlTheRoadSingleDirection.get(indexNeighborRoad).getControllerGenericAuto().setIncrementIndex();
+                transport.setOvertaking(true);
+                //добавляем ее в список машин из другой дороги
+                listNeighborRoad.add(transport);
+
+                translateTransition.setOnFinished(actionEvent1 -> {
+                    listNeighborRoad.remove(transport);
+                });
+            });
+        } else {
+            universalLogicOfMovementInOneLine(listOfScannedAuto.get(index), index - 1);
+        }
+    }
+
+    private long idToGoFor(double translateX, CopyOnWriteArrayList<Transport> list, int distanceToThePast, int distanceToTheNext ) {
         for (int i = 1; i < list.size(); i++) {
-            if ((list.get(i).getTranslateX() < (translateX - 70)) && (list.get(i - 1).getTranslateX() > (translateX + 120))) {
+            if ((list.get(i).getTranslateX() < (translateX + distanceToThePast)) && (list.get(i - 1).getTranslateX() > (translateX + distanceToTheNext))) {
                 return list.get(i).getIdNode();
             }
         }
@@ -409,24 +380,5 @@ public class ControllerLogicAuto implements Runnable {
     public void setNumberInListRoads(int numberInListRoads) {
         this.numberInListRoads = numberInListRoads;
     }
-
-    private Transport findById(long id) {
-        for (Transport transport : listOfScannedAuto) {
-            if (transport.getIdNode() == id) {
-                return transport;
-            }
-        }
-        return null;
-    }
-
-    private Transport findByIdLeftRoad(long id, CopyOnWriteArrayList<Transport> list) {
-        for (Transport transport : list) {
-            if (transport.getIdNode() == id) {
-                return transport;
-            }
-        }
-        return null;
-    }
-
 
 }

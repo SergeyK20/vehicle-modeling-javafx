@@ -56,15 +56,17 @@ public class GenericSceneTunnel {
 
         //если туннель, то плявляется доболнительный функционал по изменениию скорости
         if (road instanceof Tunnel) {
+            VBox vBoxUpdateSpeed = new VBox();
+            vBoxUpdateSpeed.setSpacing(25);
             btnChangeSpeed = new Button();
-            btnChangeSpeed.setLayoutY(500);
-            btnChangeSpeed.setLayoutX(250);
+            vBoxUpdateSpeed.setLayoutY(road.getCountRoadBackground().getHeightY() - 100);
+            vBoxUpdateSpeed.setLayoutX(50);
             btnChangeSpeed.setText("Изменить скорость");
-            paneModelingAuto.getChildren().add(btnChangeSpeed);
             speedKmCh = new TextField();
-            speedKmCh.setLayoutX(400);
-            speedKmCh.setLayoutY(500);
-            paneModelingAuto.getChildren().add(speedKmCh);
+            vBoxUpdateSpeed.getChildren().addAll(speedKmCh, btnChangeSpeed);
+            vBoxUpdateSpeed.setStyle("-fx-border-style: solid; -fx-border-width: 1px; -fx-border-color: black;" +
+                    "-fx-padding: 10px");
+            paneModelingAuto.getChildren().add(vBoxUpdateSpeed);
 
             //при каждом новом нажатии регистрируется метод изменения скорости
             btnChangeSpeed.setOnMousePressed(mouseEvent -> {
@@ -92,23 +94,26 @@ public class GenericSceneTunnel {
 
         //три кнопки внизу
         Button pause = new Button("Пауза");
-        pause.setLayoutY(550);
+        pause.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
         pause.setLayoutX(400);
+        pause.setMinSize(95, 25);
 
         Button proceed = new Button("Продолжить");
         proceed.setLayoutX(500);
-        proceed.setLayoutY(550);
+        proceed.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
+        proceed.setMinSize(95, 25);
 
         Button stop = new Button("Остановить");
-        stop.setLayoutY(550);
+        stop.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
         stop.setLayoutX(600);
+        stop.setMinSize(95, 25);
 
         Label label = new Label();
         label.setFont(new Font("Arial", 20));
-        label.setLayoutY(550);
+        label.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
         label.setLayoutX(250);
 
-        if(transportChangeSpeed != null){
+        if (transportChangeSpeed != null) {
             label.setText(String.valueOf(transportChangeSpeed.getIdNode()) + " " + String.valueOf(transportChangeSpeed.getAnimation().getRate() * 2000.0));
         } else {
             label.setText("");
@@ -118,9 +123,9 @@ public class GenericSceneTunnel {
 
 
         //сцена на которой все располагается
-        Scene scene = new Scene(paneModelingAuto, 800, 600);
-        stage.setX((Screen.getPrimary().getBounds().getMaxX()  - 800.0) / 2.0);
-        stage.setY((Screen.getPrimary().getBounds().getMaxY()  - 600.0) / 2.0);
+        Scene scene = new Scene(paneModelingAuto, 800, road.getCountRoadBackground().getHeightY());
+        stage.setX((Screen.getPrimary().getBounds().getMaxX() - 800.0) / 2.0);
+        stage.setY((Screen.getPrimary().getBounds().getMaxY() - 600.0) / 2.0);
         stage.setScene(scene);
         stage.show();
 
@@ -136,7 +141,6 @@ public class GenericSceneTunnel {
                     proceed,
                     stop
             );
-
         } else {
             modelingAuto(
                     2 * road.getCountRoadBackground().getCountRoad() * 2,
