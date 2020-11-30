@@ -1,9 +1,12 @@
 package main.java.view;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -13,6 +16,7 @@ import main.java.controller.ControllerSettingsSimulation;
 import main.java.model.*;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class SettingsScene {
 
@@ -342,6 +346,17 @@ public class SettingsScene {
                 Spinner<Integer> spinnerEndTime = new Spinner<>();
                 Spinner<Integer> spinnerIntensityTime = new Spinner<>();
 
+                settingSpinners(spinnerNormTimeMat,
+                        spinnerNormTimeDis,
+                        spinnerNormSpeedMat,
+                        spinnerNormSpeedDis,
+                        spinnerStartSpeed,
+                        spinnerEndSpeed,
+                        spinnerIntensitySpeed,
+                        spinnerStartTime,
+                        spinnerEndTime,
+                        spinnerIntensityTime);
+
                 //регистрация события при нажатие кнопки "Cтарт моделирования"
                 startSimulation.setOnMousePressed(actionEvent -> {
                     try {
@@ -488,6 +503,63 @@ public class SettingsScene {
                 sceneSettings.setRoot(paneAccidentalDistribution);
                 break;
         }
+    }
+
+    private void settingSpinners(Spinner<Integer> spinnerNormTimeMat,
+                                 Spinner<Integer> spinnerNormTimeDis,
+                                 Spinner<Integer> spinnerNormSpeedMat,
+                                 Spinner<Integer> spinnerNormSpeedDis,
+                                 Spinner<Integer> spinnerStartSpeed,
+                                 Spinner<Integer> spinnerEndSpeed,
+                                 Spinner<Integer> spinnerIntensitySpeed,
+                                 Spinner<Integer> spinnerStartTime,
+                                 Spinner<Integer> spinnerEndTime,
+                                 Spinner<Integer> spinnerIntensityTime) {
+
+        spinnerNormTimeMat.setEditable(true);
+        spinnerNormTimeDis.setEditable(true);
+        spinnerNormSpeedMat.setEditable(true);
+        spinnerNormSpeedDis.setEditable(true);
+        spinnerEndTime.setEditable(true);
+        spinnerStartSpeed.setEditable(true);
+        spinnerEndSpeed.setEditable(true);
+        spinnerIntensitySpeed.setEditable(true);
+        spinnerStartTime.setEditable(true);
+        spinnerIntensityTime.setEditable(true);
+
+        Pattern p = Pattern.compile("(\\d+\\.?\\d*)?");
+
+        spinnerNormTimeMat.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!p.matcher(newValue).matches()) spinnerNormTimeMat.getEditor().setText(oldValue);
+        });
+        spinnerNormTimeDis.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!p.matcher(newValue).matches()) spinnerNormTimeDis.getEditor().setText(oldValue);
+        });
+        spinnerNormSpeedMat.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!p.matcher(newValue).matches()) spinnerNormSpeedMat.getEditor().setText(oldValue);
+        });
+        spinnerNormSpeedDis.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!p.matcher(newValue).matches()) spinnerNormSpeedDis.getEditor().setText(oldValue);
+        });
+        spinnerStartSpeed.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!p.matcher(newValue).matches()) spinnerStartSpeed.getEditor().setText(oldValue);
+        });
+        spinnerEndSpeed.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!p.matcher(newValue).matches()) spinnerEndSpeed.getEditor().setText(oldValue);
+        });
+        spinnerStartTime.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!p.matcher(newValue).matches()) spinnerStartTime.getEditor().setText(oldValue);
+        });
+        spinnerEndTime.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!p.matcher(newValue).matches()) spinnerEndTime.getEditor().setText(oldValue);
+        });
+        spinnerIntensitySpeed.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!p.matcher(newValue).matches()) spinnerIntensitySpeed.getEditor().setText(oldValue);
+        });
+        spinnerIntensityTime.getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!p.matcher(newValue).matches()) spinnerIntensityTime.getEditor().setText(oldValue);
+        });
+
     }
 
     private void selectionOfDistribution(
