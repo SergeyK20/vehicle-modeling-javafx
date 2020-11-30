@@ -1,96 +1,72 @@
 package main.java;
 
-
 import javafx.animation.Interpolator;
-import javafx.animation.ParallelTransition;
-import javafx.animation.PathTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 
-
 import java.io.*;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.*;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import main.java.model.Transport;
 import main.java.view.StartScene;
 
 public class Main extends Application {
 
-
     @Override
     public void start(Stage stage) throws Exception {
         StartScene startScene = new StartScene(stage);
         startScene.start();
+
+
        /* Rectangle rectangle = new Rectangle();
-        rectangle.setFill(Color.MAGENTA);
-        rectangle.setWidth(100);
-        rectangle.setHeight(50);
-        Pane pane = new Pane();
-        pane.getChildren().add(rectangle);
-        pane.setMaxHeight(600);
-        pane.setMaxWidth(800);
+
+        StackPane stackPane = new StackPane();
+        TranslateTransition tt = new TranslateTransition();
+        tt.setFromX(0);
+        tt.setFromY(100);
+        tt.setToX(1000);
+
+        //установка скорости
+        double speed = 80.0;
+
+        tt.setRate(speed / 2000.0);
 
 
-        Scene scene = new Scene(pane, 800, 600);
+        ImagePattern ip = new ImagePattern(new Image(Main.class.getResourceAsStream("/image/auto1.jpg")));
+        rectangle.setHeight(40);
+        rectangle.setWidth(50);
+        rectangle.setFill(ip);
+        Text text = new Text(String.valueOf("123"));
+        stackPane.getChildren().addAll(rectangle, text);
+        stackPane.setAlignment(Pos.TOP_CENTER);
+
+        tt.setNode(stackPane);
+        tt.setByX(10f);
+        tt.setByY(10f);
+        tt.setCycleCount(1);
+        tt.setInterpolator(Interpolator.LINEAR);
+        tt.play();
+
+        Scene scene = new Scene(stackPane, 800, 600);
         stage.centerOnScreen();
         stage.setScene(scene);
         stage.show();
-
-        TranslateTransition translateTransition = new TranslateTransition();
-        translateTransition.setFromY(300);
-        translateTransition.setFromX(0);
-        translateTransition.setToX(800);
-        translateTransition.setCycleCount(1);
-        translateTransition.setInterpolator(Interpolator.LINEAR);
-        translateTransition.setNode(rectangle);
-        translateTransition.setRate(0.025);
-        translateTransition.play();
-
-        rectangle.setOnMousePressed(mouseEvent -> {
-            PathTransition pathTransition = new PathTransition();
-            System.out.println(rectangle.getTranslateX());
-            System.out.println(rectangle.getTranslateY());
-            pathTransition.setPath(new Path(new MoveTo(rectangle.getTranslateX() + 20, rectangle.getTranslateY() + 20),
-                    new LineTo(rectangle.getTranslateX() + 100, rectangle.getTranslateY() + 100)));
-            pathTransition.setRate(0.025 * 8);
-            rectangle.setRotate(45.0);
-            pathTransition.setNode(rectangle);
-            pathTransition.play();
-
-            pathTransition.setOnFinished(actionEvent -> {
-                rectangle.setRotate(0);
-                TranslateTransition translateTransition1 = new TranslateTransition();
-                translateTransition1.setFromY(rectangle.getTranslateY());
-                translateTransition1.setFromX(rectangle.getTranslateX());
-                translateTransition1.setToX(800);
-                translateTransition1.setCycleCount(1);
-                translateTransition1.setInterpolator(Interpolator.LINEAR);
-                translateTransition1.setNode(rectangle);
-                translateTransition1.setRate(0.025 * (800 / rectangle.getTranslateX()));
-                translateTransition1.play();
-                translateTransition.stop();
-            });
-
-        });
 */
     }
 
 
     @Override
     public void stop() {
-        /*flagClose = true;
-        es.shutdown();
-        exStart.shutdown();*/
         System.exit(0);
     }
 
@@ -149,32 +125,6 @@ public class Main extends Application {
             System.out.print(element.getKey() + " ");
         }*/
 
-        /*System.out.println(new Random().nextDouble());
-        double[] mas = new double[10];
-        for (int i = 0; i < 100; i++) {*//*
-            System.out.println(mas[i] = (new Random().nextGaussian()  + 3));
-            System.out.println(mas[i] = (1 + new Random().nextDouble() * 8 ));
-            System.out.println(mas[i] = Math.log(1 - new Random().nextDouble()) / -3);
-            System.out.println(mas[i] = 1-1/Math.pow(2.71828, new Random().nextDouble() * 60));*//*
-            //машин в минуту / минуту
-            *//*System.out.println(mas[i] = -1 / (30 / 60.0) * Math.log(new Random().nextDouble()));
-            mas[i] = mas[i] + 1;*//*
-            System.out.println(mas[i] = -1 / (1 / (1000/ 50.0)) * Math.log(new Random().nextDouble()));
-            mas[i] = Math.round(mas[i]) + 20;
-            *//*TimeUnit.SECONDS.sleep(Math.round(mas[i]));*//*
-        }
-        Arrays.sort(mas);
-        double raz = mas[99] - mas[0];
-        double shag = raz / 8.0;
-        int i = 0;
-        double temp = mas[0];
-        while (temp < mas[99]) {
-            temp += shag;
-            while (i < 100 && mas[i] <= temp) {
-                System.out.print("*");
-                i++;
-            }
-            System.out.println();
-        }*/
+
     }
 }

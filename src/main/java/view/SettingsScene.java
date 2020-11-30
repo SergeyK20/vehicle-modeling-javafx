@@ -1,16 +1,11 @@
 package main.java.view;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.Style;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -25,7 +20,6 @@ public class SettingsScene {
     private Button startSimulation;
     private BuilderRoad road;
     private StartScene startScene;
-    private Spinner<Integer> countRoad;
     private static final int LAYOUT_X_LEFT_PANE = 100;
     private static final int LAYOUT_X_RIGHT_PANE = 320;
 
@@ -70,6 +64,8 @@ public class SettingsScene {
 
         label.setFont(new Font("Arial", 30));
 
+        Spinner<Integer> countRoad = new Spinner<>();
+
         if (road instanceof Tunnel) {
             label.setText("Настрока режима тоннель");
             label.setLayoutX(125);
@@ -79,7 +75,7 @@ public class SettingsScene {
             label.setLayoutX(100);
             label.setLayoutY(25);
 
-            countRoad = new Spinner<>();
+
             SpinnerValueFactory<Integer> spinnerValue;
             try {
                 Objects.requireNonNull(road.getCountRoadBackground());
@@ -100,15 +96,15 @@ public class SettingsScene {
 
         if (road.getSpeed() == null || road.getSpeed().getNameDistributionLow().equals(Distribution.DETERMINISTIC.getNameDistribution())) {
             comboBoxListModeling.setValue(KindModeling.DETERMINISTIC.getNameKindModeling());
-            discreteTunnel(paneSettings);
+            discreteTunnel(paneSettings, countRoad);
         } else {
             comboBoxListModeling.setValue(KindModeling.ACCIDENTAL.getNameKindModeling());
             Objects.requireNonNull(comboBoxListModeling, "ComboBox еще не создан...");
-            selectionOfKindDistribution(sceneSettings, comboBoxListModeling, label, backBtn);
+            selectionOfKindDistribution(sceneSettings, comboBoxListModeling, label, backBtn, countRoad);
         }
 
         comboBoxListModeling.setOnAction(event ->
-                selectionOfKindDistribution(sceneSettings, comboBoxListModeling, label, backBtn)
+                selectionOfKindDistribution(sceneSettings, comboBoxListModeling, label, backBtn, countRoad)
         );
 
         stage.setX((Screen.getPrimary().getBounds().getMaxX() - 600.0) / 2.0);
@@ -117,7 +113,7 @@ public class SettingsScene {
         stage.show();
     }
 
-    private void discreteTunnel(Pane paneSettings) {
+    private void discreteTunnel(Pane paneSettings, Spinner<Integer> countRoad) {
         try {
             VBox vBox = new VBox();
             vBox.setLayoutX(125);
@@ -194,7 +190,7 @@ public class SettingsScene {
                 spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4, 12, 4));
                 spinnerTwo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(2, 6, 2));
             }
-        } else{
+        } else {
             try {
                 Objects.requireNonNull(road.getCountRoadBackground());
                 spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(20, 70, road.getSpeed().getExpectedValue()));
@@ -212,7 +208,7 @@ public class SettingsScene {
         paneSettings.getChildren().add(normDistributionBox);
     }
 
-    private void uniform(Pane paneSettings, String inscriptionOne, String inscriptionTwo, int layoutX, Spinner<Integer>  spinnerOne, Spinner<Integer>  spinnerTwo) {
+    private void uniform(Pane paneSettings, String inscriptionOne, String inscriptionTwo, int layoutX, Spinner<Integer> spinnerOne, Spinner<Integer> spinnerTwo) {
         VBox uniformDistributionBox = new VBox();
         uniformDistributionBox.setLayoutX(layoutX);
         uniformDistributionBox.setLayoutY(300);
@@ -220,7 +216,6 @@ public class SettingsScene {
         spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(4, 12));
         spinnerOne.setMaxSize(150, 25);
         spinnerTwo.setMaxSize(150, 25);
-
 
 
         if (layoutX == 100) {
@@ -232,7 +227,7 @@ public class SettingsScene {
                 spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 15, 1));
                 spinnerTwo.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 15, 15));
             }
-        } else{
+        } else {
             try {
                 Objects.requireNonNull(road.getCountRoadBackground());
                 spinnerOne.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(20, 100, road.getSpeed().getStartBoundary()));
@@ -250,7 +245,7 @@ public class SettingsScene {
         paneSettings.getChildren().add(uniformDistributionBox);
     }
 
-    private void exponential(Pane paneSettings, String inscriptionOne, int layoutX, Spinner<Integer>  spinnerOne) {
+    private void exponential(Pane paneSettings, String inscriptionOne, int layoutX, Spinner<Integer> spinnerOne) {
         VBox exponentialDistributionBox = new VBox();
         exponentialDistributionBox.setLayoutX(layoutX);
         exponentialDistributionBox.setLayoutY(300);
@@ -279,7 +274,7 @@ public class SettingsScene {
         paneSettings.getChildren().add(exponentialDistributionBox);
     }
 
-    private void selectionOfKindDistribution(Scene sceneSettings, ComboBox<String> comboBox, Label heading, Button backBtn) {
+    private void selectionOfKindDistribution(Scene sceneSettings, ComboBox<String> comboBox, Label heading, Button backBtn, Spinner<Integer> countRoad) {
         switch (Objects.requireNonNull(KindModeling.ACCIDENTAL.getEnumsKindModeling(comboBox.getValue()))) {
             case DETERMINISTIC:
                 Pane paneDiscrete = new Pane();
@@ -290,7 +285,7 @@ public class SettingsScene {
                 }
                 paneDiscrete.getChildren().addAll(heading, startSimulation, backBtn, comboBox);
                 sceneSettings.setRoot(paneDiscrete);
-                discreteTunnel(paneDiscrete);
+                discreteTunnel(paneDiscrete, countRoad);
                 break;
             case ACCIDENTAL:
                 Pane paneAccidentalDistribution = new Pane();

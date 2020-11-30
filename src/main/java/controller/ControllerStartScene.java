@@ -11,11 +11,9 @@ import main.java.view.StartScene;
 public class ControllerStartScene implements EventHandler<ActionEvent> {
 
     private SettingsScene settingsScene;
-    private BuilderRoad road;
 
     public ControllerStartScene(Stage stage, BuilderRoad road, StartScene startScene){
         this.settingsScene = new SettingsScene(stage, road, startScene);
-        this.road = road;
     }
 
     @Override

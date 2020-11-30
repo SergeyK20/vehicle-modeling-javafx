@@ -3,8 +3,10 @@ package main.java.controller;
 import javafx.animation.Animation;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import main.java.model.BuilderRoad;
 import main.java.model.Transport;
 import main.java.view.GenericSceneTunnel;
@@ -82,14 +84,14 @@ public class ControllerGenericAuto implements Runnable {
                 // следит за тем, чтобы модели не создавались друг на друге
                 try {
                     if (fromX == -100) {
-                            while (index != 0 && findById(index - 1).getTranslateX() <= 0) {
+                        while (index != 0 && findById(index - 1).getTranslateX() <= 0) {
 
-                            }
-                        } else {
-                            while (index != 0 && findById(index - 1).getTranslateX() >= 900) {
-
-                            }
                         }
+                    } else {
+                        while (index != 0 && findById(index - 1).getTranslateX() >= 900) {
+
+                        }
+                    }
                 } catch (NullPointerException e) {
                     System.out.println("Ошибка пр соблюдении дистанции...");
                 }
@@ -97,21 +99,27 @@ public class ControllerGenericAuto implements Runnable {
                 tt.setFromX(fromX);
                 tt.setFromY(fromY);
                 tt.setToX(toX);
+
                 //установка скорости
                 speed = road.getSpeed().getSpeed();
+
                 tt.setRate(speed / 2000.0);
+
                 //создание новой машины
                 Transport transport = new Transport(index++, tt);
 
+                transport.setTextSpeed(tt.getRate());
+
                 if (fromX == 1000) {
-                    transport.setRotate(180);
+                    transport.getRectangle().setRotate(180);
                 }
 
                 //добавление ее в список для отслеживания правил пдд
                 list.add(transport);
 
+
                 //добавляет новую модель на сцену
-                if(transport.getAnimation() != null) {
+                if (transport.getAnimation() != null) {
                     Platform.runLater(() -> {
                         pane.getChildren().add(transport);
                     });
@@ -122,9 +130,7 @@ public class ControllerGenericAuto implements Runnable {
                 startNewAuto = System.nanoTime();
 
                 //выделяет каждую машину при нажатии
-                transport.addEventHandler(MouseEvent.MOUSE_PRESSED,
-                        new ControllerObjectSelection(list, genericSceneTunnel)
-                );
+                transport.setOnMousePressed(new ControllerObjectSelection(list, genericSceneTunnel));
 
                 //устанаввливает временную задежку между созданием машин
                 try {
@@ -139,14 +145,15 @@ public class ControllerGenericAuto implements Runnable {
                     if (transport.getTranslateX() == 1000.0 || transport.getTranslateX() == -100.0) {
                         try {
                             list.remove(transport);
+                           // Platform.runLater(() -> pane.getChildren().remove(transport));
                         } catch (NullPointerException e) {
-                            e.printStackTrace();
+                           // e.printStackTrace();
                         }
-                        Platform.runLater(() -> pane.getChildren().remove(transport));
+
                     }
                     if (transport.getAnimation().getStatus() == Animation.Status.STOPPED && !(transport.getAnimation().getNode().getTranslateX() == 1000.0 || transport.getAnimation().getNode().getTranslateX() == -100.0)) {
                         System.out.println("index before: " + index);
-                        /*--index;*/
+                       // --index;
                         System.out.println("index after: " + index);
                     }
                 });
@@ -202,9 +209,9 @@ public class ControllerGenericAuto implements Runnable {
         index--;
     }
 
-    private Transport findById(long id){
-        for(Transport transport: list){
-            if(transport.getIdNode() == id){
+    private Transport findById(long id) {
+        for (Transport transport : list) {
+            if (transport.getIdNode() == id) {
                 return transport;
             }
         }

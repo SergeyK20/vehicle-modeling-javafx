@@ -1,11 +1,13 @@
 package main.java.view;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -16,6 +18,7 @@ import main.java.model.Transport;
 import main.java.model.Tunnel;
 
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.*;
 
 public class GenericSceneTunnel {
@@ -35,6 +38,9 @@ public class GenericSceneTunnel {
     private List<ControlOneRoad> listControlRoadsFromLeftToRight;
     private List<ControlOneRoad> listControlRoadsFromRightToLeft;
 
+    boolean flagStopTimer;
+    boolean flagPauseTimer;
+
     public GenericSceneTunnel(Stage stage, BuilderRoad road, SettingsScene settingsScene) {
         this.stage = stage;
         this.road = road;
@@ -52,6 +58,9 @@ public class GenericSceneTunnel {
         //панель моделирования
         Pane paneModelingAuto = new Pane();
         paneModelingAuto.setBackground(bk);
+
+        HBox hBox = new HBox();
+        timer(hBox);
 
 
         //если туннель, то плявляется доболнительный функционал по изменениию скорости
@@ -119,7 +128,7 @@ public class GenericSceneTunnel {
             label.setText("");
         }
 
-        paneModelingAuto.getChildren().addAll(pause, stop, proceed, label);
+        paneModelingAuto.getChildren().addAll(hBox, pause, stop, proceed, label);
 
 
         //сцена на которой все располагается
@@ -155,9 +164,59 @@ public class GenericSceneTunnel {
 
     }
 
+    private void timer(HBox hBox) {
+        hBox.setLayoutX(380);
+        hBox.setLayoutY(5);
+        Label minutes = new Label();
+        Label seconds = new Label();
+        minutes.setFont(new Font("Aria", 20));
+        seconds.setFont(new Font("Aria", 20));
+        Label label = new Label(":");
+        label.setFont(new Font("Aria", 20));
+        int[] mas = new int[60];
+        hBox.getChildren().addAll(minutes, label, seconds);
+
+        for (int i = 0; i < mas.length; i++) {
+            mas[i] = i;
+        }
+
+        Thread th = new Thread(new Runnable() {
+            int i = 0;
+            int m = 0;
+
+            @Override
+            public void run() {
+                while (!flagStopTimer) {
+                    if (!flagPauseTimer) {
+                        if (mas[i] == 59) {
+                            i = 0;
+                            Platform.runLater(() -> minutes.setText(String.valueOf(++m)));
+                        }
+                        Platform.runLater(() -> seconds.setText(String.valueOf(mas[i])));
+                    }
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    i++;
+                }
+            }
+        });
+        th.start();
+    }
+
     // получение информации какой транспорт выделен
-    public void initButtonEvent(Transport transportChangeSpeed) {
-        this.transportChangeSpeed = transportChangeSpeed;
+    public void initButtonEvent(Rectangle transportChangeSpeed) {
+        if(road instanceof Tunnel) {
+            for(CopyOnWriteArrayList<Transport> element: listAutoInRoadsFromLeftToRight) {
+                for(Transport rec: element) {
+                    if(rec.getRectangle().equals(transportChangeSpeed)) {
+                        this.transportChangeSpeed = rec;
+                    }
+                }
+            }
+        }
     }
 
     private void modelingAuto(int nThreads, Pane paneModelingAuto, List<Integer> listFromY, Button pause, Button proceed, Button stop) {
@@ -234,22 +293,27 @@ public class GenericSceneTunnel {
 
         //событие при нажатие кнопки пауза
         pause.setOnMousePressed(event -> {
-            //сообщаем контроллеру генерации, чтобы не создавал новые машины
-            for (int i = 0; i < (nThreads / 2); i++) {
-                controlOneRoadList.get(i).getControllerGenericAuto().setPause(true);
-                controlOneRoadList.get(i).getControllerGenericAuto().setNewTimes(true);
+            if (!flagPauseTimer) {
+                //сообщаем контроллеру генерации, чтобы не создавал новые машины
+                for (int i = 0; i < (nThreads / 2); i++) {
+                    controlOneRoadList.get(i).getControllerGenericAuto().setPause(true);
+                    controlOneRoadList.get(i).getControllerGenericAuto().setNewTimes(true);
+                }
+                flagPauseTimer = true;
+                ControllerPause controllerPause = new ControllerPause(controlOneRoadList, listRoads);
+                pause.setOnAction(controllerPause);
             }
-
-            ControllerPause controllerPause = new ControllerPause(controlOneRoadList, listRoads);
-            pause.setOnAction(controllerPause);
         });
 
         proceed.setOnMousePressed(event -> {
-            for (int i = 0; i < (nThreads / 2); i++) {
-                controlOneRoadList.get(i).getControllerGenericAuto().setPause(false);
+            if (flagPauseTimer) {
+                for (int i = 0; i < (nThreads / 2); i++) {
+                    controlOneRoadList.get(i).getControllerGenericAuto().setPause(false);
+                }
+                flagPauseTimer = false;
+                ControllerProceed controllerProceed = new ControllerProceed(listRoads);
+                proceed.setOnAction(controllerProceed);
             }
-            ControllerProceed controllerProceed = new ControllerProceed(listRoads);
-            proceed.setOnAction(controllerProceed);
         });
 
         stop.setOnMousePressed(event -> {
@@ -257,6 +321,7 @@ public class GenericSceneTunnel {
                 controlOneRoadList.get(i).getControllerGenericAuto().setFlagClose(true);
                 controlOneRoadList.get(i).getControllerGenericAuto().setPause(true);
                 controlOneRoadList.get(i).getControllerLogicAuto().setClose(true);
+                flagStopTimer = true;
             }
 
             executorService.shutdown();

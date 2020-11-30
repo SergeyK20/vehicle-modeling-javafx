@@ -100,14 +100,14 @@ public class ControllerLogicAuto implements Runnable {
                         return (int) (o1.getIdNode() - o2.getIdNode());
                     }
                 });
-                System.out.println(listOfScannedAuto.toString());
+
                 for (int i = 1; i < listOfScannedAuto.size(); i++) {
                     try {
                         if (listOfScannedAuto.get(i).getIdNode() != 0) {
                             if (listOfScannedAuto.get(i).getTranslateX() != 0.0) {
                                 if (listOfScannedAuto.get(i).getTranslateX() >= (listOfScannedAuto.get(i - 1).getTranslateX() < 0 ?
-                                        listOfScannedAuto.get(i - 1).getTranslateX() + 70 :
-                                        listOfScannedAuto.get(i - 1).getTranslateX() - 70)) {
+                                        listOfScannedAuto.get(i - 1).getTranslateX() + 80 :
+                                        listOfScannedAuto.get(i - 1).getTranslateX() - 80)) {
                                     universalLogicOfMovementInOneLine(listOfScannedAuto.get(i), i - 1);
                                 }
                             }
@@ -128,11 +128,7 @@ public class ControllerLogicAuto implements Runnable {
                     try {
                         if (listOfScannedAuto.get(i).getIdNode() != 0) {
                             if (listOfScannedAuto.get(i).getTranslateX() != 1000.0) {
-                                if (listOfScannedAuto.get(i).getTranslateX() >= (listOfScannedAuto.get(i - 1).getTranslateX() > 900 ?
-                                        listOfScannedAuto.get(i - 1).getTranslateX() - 70 :
-                                        listOfScannedAuto.get(i - 1).getTranslateX() + 70)
-                                ) {
-
+                                if (listOfScannedAuto.get(i).getTranslateX() <= listOfScannedAuto.get(i - 1).getTranslateX() + 80) {
                                     universalLogicOfMovementInOneLine(listOfScannedAuto.get(i), i - 1);
                                 }
                             }
@@ -157,6 +153,7 @@ public class ControllerLogicAuto implements Runnable {
             }
             //если обогнал
             transport.getAnimation().setRate(beforeTransport.getAnimation().getRate());
+            transport.setTextSpeed(transport.getAnimation().getRate());
         }
     }
 
@@ -183,19 +180,18 @@ public class ControllerLogicAuto implements Runnable {
                                                 0,
                                                 -70,
                                                 120);
-                                    } else {
-                                        if (isRightRoad) {
-                                            CopyOnWriteArrayList<Transport> listRightRoad = listOfRoads.get(numberInListRoads + 1);
-                                            overtakingFromLeftToRight(i, listRightRoad,
-                                                    numberInListRoads + 1,
-                                                    100,
-                                                    95,
-                                                    45.0,
-                                                    1100,
-                                                    0,
-                                                    -70,
-                                                    120);
-                                        }
+                                    }
+                                    if (isRightRoad) {
+                                        CopyOnWriteArrayList<Transport> listRightRoad = listOfRoads.get(numberInListRoads + 1);
+                                        overtakingFromLeftToRight(i, listRightRoad,
+                                                numberInListRoads + 1,
+                                                100,
+                                                95,
+                                                45.0,
+                                                1100,
+                                                0,
+                                                -70,
+                                                120);
                                     }
                                 }
                             }
@@ -217,10 +213,7 @@ public class ControllerLogicAuto implements Runnable {
                     try {
                         if (listOfScannedAuto.get(i).getIdNode() != 0) {
                             if (listOfScannedAuto.get(i).getTranslateX() != 1000.0) {
-                                if (listOfScannedAuto.get(i).getTranslateX() <= (listOfScannedAuto.get(i - 1).getTranslateX() > 900 ?
-                                        listOfScannedAuto.get(i - 1).getTranslateX() - 70 :
-                                        listOfScannedAuto.get(i - 1).getTranslateX() + 70)
-                                ) {
+                                if (listOfScannedAuto.get(i).getTranslateX() <= listOfScannedAuto.get(i - 1).getTranslateX() + 70) {
                                     if (isLeftRoad) {
                                         //получаю список машин на левой дороге от меня
                                         CopyOnWriteArrayList<Transport> listLeftRoad = listOfRoads.get(numberInListRoads + 1);
@@ -230,7 +223,7 @@ public class ControllerLogicAuto implements Runnable {
                                                 95,
                                                 -225.0,
                                                 -1100,
-                                                -180,
+                                                180,
                                                 70,
                                                 -120);
                                     }
@@ -243,7 +236,7 @@ public class ControllerLogicAuto implements Runnable {
                                                 -55,
                                                 -135.0,
                                                 -1100,
-                                                -180,
+                                                180,
                                                 70,
                                                 -120);
                                     }
@@ -331,7 +324,7 @@ public class ControllerLogicAuto implements Runnable {
         }
     }
 
-    private long idToGoFor(double translateX, CopyOnWriteArrayList<Transport> list, int distanceToThePast, int distanceToTheNext ) {
+    private long idToGoFor(double translateX, CopyOnWriteArrayList<Transport> list, int distanceToThePast, int distanceToTheNext) {
         for (int i = 1; i < list.size(); i++) {
             if ((list.get(i).getTranslateX() < (translateX + distanceToThePast)) && (list.get(i - 1).getTranslateX() > (translateX + distanceToTheNext))) {
                 return list.get(i).getIdNode();

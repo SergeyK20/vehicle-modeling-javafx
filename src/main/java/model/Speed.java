@@ -129,4 +129,6 @@ public class Speed {
     public void setIntensity(double intensity) {
         this.intensity = intensity;
     }
+
+
 }

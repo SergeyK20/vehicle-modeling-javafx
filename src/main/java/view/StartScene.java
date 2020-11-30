@@ -14,13 +14,9 @@ import main.java.model.BuilderRoad;
 import main.java.model.Highway;
 import main.java.model.Tunnel;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class StartScene {
 
     private Stage stage;
-    private Button simulationSettings;
     private BuilderRoad road;
 
     public StartScene(Stage stage) {
@@ -39,21 +35,20 @@ public class StartScene {
             alert.setHeaderText("Информация о программе");
             alert.setContentText(
                     "Лабораторный практикум по дисциплине: \n" +
-                    "       \" Технологии программирования \"\n" +
-                    "Тема: " +
+                            "       \" Технологии программирования \"\n" +
+                            "Тема: " +
                             "\"Система моделирования движения транспорта\n" +
-                    "                  в тоннеле и на автостраде\"\n" +
+                            "                  в тоннеле и на автостраде\"\n" +
                             "\n" +
-                    "Разработчики:\n" +
-                    "   Студенты группы 6404:\n" +
-                    "   Кашкинов Сергей \n" +
-                    "   Балаев Рафаил\n" +
-                    "Руководитель:\n" +
-                    "   Зеленко Лариса Сергеевна\n" +
-                    "               Самарский университет 2020");
+                            "Разработчики:\n" +
+                            "   Студенты группы 6404:\n" +
+                            "   Кашкинов Сергей \n" +
+                            "   Балаев Рафаил\n" +
+                            "Руководитель:\n" +
+                            "   Зеленко Лариса Сергеевна\n" +
+                            "               Самарский университет 2020");
             alert.showAndWait();
         });
-
 
 
         Label labelHello = new Label("Добро пожаловать!");
@@ -63,8 +58,7 @@ public class StartScene {
 
         Pane paneStart = new Pane();
 
-
-        simulationSettings = new Button("Ок");
+        Button simulationSettings = new Button("Ок");
         simulationSettings.setLayoutX(170);
         simulationSettings.setLayoutY(245);
         simulationSettings.setMinSize(115, 25);

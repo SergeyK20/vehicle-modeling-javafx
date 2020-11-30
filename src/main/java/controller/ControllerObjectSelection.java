@@ -3,6 +3,7 @@ package main.java.controller;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 import main.java.model.Transport;
 import main.java.view.GenericSceneTunnel;
@@ -24,12 +25,12 @@ public class ControllerObjectSelection implements EventHandler<MouseEvent> {
     public void handle(MouseEvent mouseEvent) {
         for (Transport element : list) {
             if(element != null) {
-                if (element.getStroke() != null) {
-                    element.setStroke(null);
+                if (element.getRectangle().getStroke() != null) {
+                    element.getRectangle().setStroke(null);
                 }
             }
         }
-        Transport transport = (Transport) mouseEvent.getTarget();
+        Rectangle transport = (Rectangle) mouseEvent.getTarget();
         transport.setStroke(Color.MAGENTA);
         transport.setStrokeType(StrokeType.OUTSIDE);
         genericSceneTunnel.initButtonEvent(transport);
