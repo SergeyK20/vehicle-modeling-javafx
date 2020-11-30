@@ -7,7 +7,9 @@ import main.java.model.BuilderRoad;
 import main.java.view.SettingsScene;
 import main.java.view.StartScene;
 
-
+/**
+ * Класс переносящий пользователя с "Начальной" сцены на сцену "Настройка"
+ */
 public class ControllerStartScene implements EventHandler<ActionEvent> {
 
     private SettingsScene settingsScene;

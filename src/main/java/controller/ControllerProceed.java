@@ -5,10 +5,11 @@ import javafx.event.EventHandler;
 import main.java.model.Transport;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Класс запускающий всю анимацию после паузы
+ */
 public class ControllerProceed implements EventHandler<ActionEvent> {
 
     private List<CopyOnWriteArrayList<Transport>> listListsAutoInRoad;

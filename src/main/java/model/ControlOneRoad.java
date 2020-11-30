@@ -4,8 +4,9 @@ import main.java.controller.ControllerGenericAuto;
 
 import main.java.controller.ControllerLogicAuto;
 
-import java.util.concurrent.ConcurrentMap;
-
+/**
+ * Класс вбирающий себя контроллер для генерации автомобилей и контроллер для логики езды, для одной полосы
+ */
 public class ControlOneRoad {
     private ControllerGenericAuto controllerGenericAuto;
     private ControllerLogicAuto controllerLogicAuto;

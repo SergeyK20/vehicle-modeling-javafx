@@ -9,6 +9,9 @@ import javafx.scene.layout.BackgroundSize;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс отвечающий за фон и количество дорог
+ */
 public class Background {
 
     private javafx.scene.layout.Background background;
@@ -43,7 +46,7 @@ public class Background {
                         BackgroundPosition.CENTER,
                         new BackgroundSize(
                                 800,
-                                 n == 1 ? 400 : (n == 2 ? 500 : 600),
+                                n == 1 ? 400 : (n == 2 ? 500 : 600),
                                 false,
                                 false,
                                 false,

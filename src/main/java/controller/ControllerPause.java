@@ -5,13 +5,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import main.java.model.ControlOneRoad;
 import main.java.model.Transport;
-import main.java.view.GenericSceneTunnel;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Класс ставящий на паузу всю анимацию на сцене
+ */
 public class ControllerPause implements EventHandler<ActionEvent> {
 
     private List<CopyOnWriteArrayList<Transport>> listListsAutoInRoad;

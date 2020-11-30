@@ -1,7 +1,9 @@
 package main.java.model;
 
+/**
+ * Класс настроки генерации времени
+ */
 public class StreamTransport {
-
 
     private double times;
     private String nameDistributionLow;
@@ -11,7 +13,6 @@ public class StreamTransport {
     private int endBoundary;
     private double intensity;
 
-    //для тоннеля
     public StreamTransport(Tunnel tunnel, double times) {
         this.times = times;
         this.nameDistributionLow = Distribution.DETERMINISTIC.getNameDistribution();

@@ -1,5 +1,8 @@
 package main.java.model;
 
+/**
+ * Виды распределения
+ */
 public enum Distribution {
     NORM("Нормальное"),
     UNIFORM("Равномерное"),
@@ -16,9 +19,9 @@ public enum Distribution {
         return nameDistribution;
     }
 
-    public Distribution getEnumsDistribution(String nameDistribution){
-        for(Distribution element: Distribution.values()){
-            if(element.getNameDistribution().equals(nameDistribution)){
+    public Distribution getEnumsDistribution(String nameDistribution) {
+        for (Distribution element : Distribution.values()) {
+            if (element.getNameDistribution().equals(nameDistribution)) {
                 return element;
             }
         }

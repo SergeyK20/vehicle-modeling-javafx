@@ -1,5 +1,8 @@
 package main.java.model;
 
+/**
+ * Интерфейс сборки всех настроек дороги
+ */
 public interface BuilderRoad {
     void setCountRoadBackground(int n);
 

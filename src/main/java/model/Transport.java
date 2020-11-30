@@ -40,6 +40,8 @@ public class Transport extends StackPane {
         ImagePattern ip = new ImagePattern(new Image(getClass().getResourceAsStream(mapImage.get(randomImage))));
         this.idNode = idNode;
         this.animation = animation;
+        this.setHeight(40);
+        this.setWidth(50);
         rectangle.setHeight(40);
         rectangle.setWidth(50);
         rectangle.setFill(ip);
@@ -78,7 +80,7 @@ public class Transport extends StackPane {
         setTextSpeed(animation.getRate());
     }
 
-    public void setTextSpeed(double speed){
+    public void setTextSpeed(double speed) {
         text.setText(String.valueOf((Math.round(speed * 2000.0))));
     }
 
@@ -87,7 +89,7 @@ public class Transport extends StackPane {
     }
 
     public int getSpeed() {
-        return (int) animation.getRate() * 2000;
+        return (int) Math.round(animation.getRate() * 2000);
     }
 
     public boolean isFlagPause() {

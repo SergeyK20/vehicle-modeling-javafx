@@ -21,6 +21,9 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
 
+/**
+ * Представление на котором генерируется моделируемая система, по настройкам, которые были указанны раньше
+ */
 public class GenericSceneTunnel {
 
     private Stage stage;
@@ -82,6 +85,7 @@ public class GenericSceneTunnel {
                 try {
                     if (Integer.parseInt(speedKmCh.getText()) >= 0 && Integer.parseInt(speedKmCh.getText()) <= 80) {
                         btnChangeSpeed.setOnAction(new ControllerChangeSpeed(speedKmCh.getText(), transportChangeSpeed));
+                        transportChangeSpeed.setTextSpeed(Double.parseDouble(speedKmCh.getText()) / 2000.0);
                     } else {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("Warning");
@@ -208,10 +212,10 @@ public class GenericSceneTunnel {
 
     // получение информации какой транспорт выделен
     public void initButtonEvent(Rectangle transportChangeSpeed) {
-        if(road instanceof Tunnel) {
-            for(CopyOnWriteArrayList<Transport> element: listAutoInRoadsFromLeftToRight) {
-                for(Transport rec: element) {
-                    if(rec.getRectangle().equals(transportChangeSpeed)) {
+        if (road instanceof Tunnel) {
+            for (CopyOnWriteArrayList<Transport> element : listAutoInRoadsFromLeftToRight) {
+                for (Transport rec : element) {
+                    if (rec.getRectangle().equals(transportChangeSpeed)) {
                         this.transportChangeSpeed = rec;
                     }
                 }

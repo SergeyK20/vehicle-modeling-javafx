@@ -7,6 +7,9 @@ import main.java.model.BuilderRoad;
 import main.java.view.GenericSceneTunnel;
 import main.java.view.SettingsScene;
 
+/**
+ * Класс переводящий пользователя со сцена "Настройка" на сцену "Моелирование движение автомобилей"
+ */
 public class ControllerSettingsSimulation implements EventHandler<ActionEvent> {
 
     private GenericSceneTunnel genericSceneTunnel;

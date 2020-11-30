@@ -1,11 +1,13 @@
 package main.java.model;
 
+/**
+ * Класс для настройки режима "Автострада" (Настройка фона, генерации скорости и времени)
+ */
 public class Highway implements BuilderRoad {
 
     private Background background;
     private Speed speed;
     private StreamTransport streamTransport;
-
 
     @Override
     public void setCountRoadBackground(int n) {

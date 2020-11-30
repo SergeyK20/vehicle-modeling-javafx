@@ -1,5 +1,8 @@
 package main.java.model;
 
+/**
+ * Класс настройки скорости
+ */
 public class Speed {
 
     private double speed;
@@ -71,7 +74,7 @@ public class Speed {
             return speed;
         }
         if (nameDistributionLow.equals(Distribution.EXPONENTIAL.getNameDistribution())) {
-            speed = Math.round(GenerationValues.generationExponential(1/ (intensity / 60.0))) + 20;
+            speed = Math.round(GenerationValues.generationExponential(1 / (intensity / 60.0))) + 20;
             return speed;
         }
         return speed;

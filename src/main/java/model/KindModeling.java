@@ -1,5 +1,8 @@
 package main.java.model;
 
+/**
+ * Класс с видами генерации
+ */
 public enum KindModeling {
     DETERMINISTIC("Детерминированное"), ACCIDENTAL("Случайное");
 

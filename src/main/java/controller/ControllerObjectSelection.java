@@ -10,13 +10,16 @@ import main.java.view.GenericSceneTunnel;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Класс обрамляющий рамкой выбранный автомобиль
+ */
 public class ControllerObjectSelection implements EventHandler<MouseEvent> {
 
     private GenericSceneTunnel genericSceneTunnel;
 
     private CopyOnWriteArrayList<Transport> list;
 
-    public ControllerObjectSelection(CopyOnWriteArrayList<Transport> list, GenericSceneTunnel genericSceneTunnel){
+    public ControllerObjectSelection(CopyOnWriteArrayList<Transport> list, GenericSceneTunnel genericSceneTunnel) {
         this.list = list;
         this.genericSceneTunnel = genericSceneTunnel;
     }
@@ -24,7 +27,7 @@ public class ControllerObjectSelection implements EventHandler<MouseEvent> {
     @Override
     public void handle(MouseEvent mouseEvent) {
         for (Transport element : list) {
-            if(element != null) {
+            if (element != null) {
                 if (element.getRectangle().getStroke() != null) {
                     element.getRectangle().setStroke(null);
                 }

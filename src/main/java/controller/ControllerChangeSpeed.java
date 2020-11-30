@@ -4,12 +4,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import main.java.model.Transport;
 
+/**
+ * Класс изменяющий скорость выбранному автомобилю
+ */
 public class ControllerChangeSpeed implements EventHandler<ActionEvent> {
 
     private String speedKmCh;
-
     private Transport transport;
-
 
     public ControllerChangeSpeed(String speedKmCh, Transport transport){
         this.speedKmCh = speedKmCh;

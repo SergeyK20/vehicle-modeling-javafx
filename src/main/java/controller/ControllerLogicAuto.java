@@ -13,6 +13,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Класс регулирующий логику езды списка автомобилей (на одной из полос)
+ */
 public class ControllerLogicAuto implements Runnable {
     private List<ControlOneRoad> listControlTheRoadSingleDirection;
     private CopyOnWriteArrayList<Transport> listOfScannedAuto;
@@ -61,7 +64,6 @@ public class ControllerLogicAuto implements Runnable {
                             isRightRoad = true;
                         }
                         logicalForDoubleLineTrafficFromRightToLeft();
-                        /*logicalForSingleLineTrafficFromRightToLeft();*/
                     }
                     break;
                 case 3:
@@ -128,7 +130,7 @@ public class ControllerLogicAuto implements Runnable {
                     try {
                         if (listOfScannedAuto.get(i).getIdNode() != 0) {
                             if (listOfScannedAuto.get(i).getTranslateX() != 1000.0) {
-                                if (listOfScannedAuto.get(i).getTranslateX() <= listOfScannedAuto.get(i - 1).getTranslateX() + 80) {
+                                if (listOfScannedAuto.get(i).getTranslateX() <= listOfScannedAuto.get(i - 1).getTranslateX() + 80 && listOfScannedAuto.get(i).getTranslateX() != 0) {
                                     universalLogicOfMovementInOneLine(listOfScannedAuto.get(i), i - 1);
                                 }
                             }
@@ -165,14 +167,14 @@ public class ControllerLogicAuto implements Runnable {
                     try {
                         if (listOfScannedAuto.get(i).getIdNode() != 0) {
                             if (listOfScannedAuto.get(i).getTranslateX() != 0.0) {
-                                if (listOfScannedAuto.get(i).getTranslateX() >= (listOfScannedAuto.get(i - 1).getTranslateX() < 0 ?
-                                        listOfScannedAuto.get(i - 1).getTranslateX() + 70 :
-                                        listOfScannedAuto.get(i - 1).getTranslateX() - 70)
+                                if (listOfScannedAuto.get(i).getTranslateX() >= listOfScannedAuto.get(i - 1).getTranslateX() - 70
                                 ) {
                                     if (isLeftRoad) {
                                         //получаю список машин на левой дороге от меня
                                         CopyOnWriteArrayList<Transport> listLeftRoad = listOfRoads.get(numberInListRoads - 1);
-                                        overtakingFromLeftToRight(i, listLeftRoad, numberInListRoads - 1,
+                                        overtakingFromLeftToRight(i,
+                                                listLeftRoad,
+                                                numberInListRoads - 1,
                                                 100,
                                                 -55,
                                                 -45.0,
@@ -183,7 +185,8 @@ public class ControllerLogicAuto implements Runnable {
                                     }
                                     if (isRightRoad) {
                                         CopyOnWriteArrayList<Transport> listRightRoad = listOfRoads.get(numberInListRoads + 1);
-                                        overtakingFromLeftToRight(i, listRightRoad,
+                                        overtakingFromLeftToRight(i,
+                                                listRightRoad,
                                                 numberInListRoads + 1,
                                                 100,
                                                 95,
@@ -208,22 +211,23 @@ public class ControllerLogicAuto implements Runnable {
         while (!isClose) {
             if (listOfScannedAuto != null) {
                 listOfScannedAuto.sort((o1, o2) -> (int) (o1.getIdNode() - o2.getIdNode()));
-
                 for (int i = 1; i < listOfScannedAuto.size(); i++) {
                     try {
                         if (listOfScannedAuto.get(i).getIdNode() != 0) {
                             if (listOfScannedAuto.get(i).getTranslateX() != 1000.0) {
-                                if (listOfScannedAuto.get(i).getTranslateX() <= listOfScannedAuto.get(i - 1).getTranslateX() + 70) {
+                                if (listOfScannedAuto.get(i).getTranslateX() <= (listOfScannedAuto.get(i - 1).getTranslateX() + 80) && listOfScannedAuto.get(i).getTranslateX() != 0) {
+                                    System.out.println(listOfScannedAuto.get(i).getTranslateX() + "<=" + (listOfScannedAuto.get(i - 1).getTranslateX() + 80));
                                     if (isLeftRoad) {
                                         //получаю список машин на левой дороге от меня
                                         CopyOnWriteArrayList<Transport> listLeftRoad = listOfRoads.get(numberInListRoads + 1);
-                                        overtakingFromLeftToRight(i, listLeftRoad,
+                                        overtakingFromLeftToRight(i,
+                                                listLeftRoad,
                                                 numberInListRoads + 1,
-                                                -100,
+                                                -80,
                                                 95,
-                                                -225.0,
+                                                -145.0,
                                                 -1100,
-                                                180,
+                                                0,
                                                 70,
                                                 -120);
                                     }
@@ -232,15 +236,14 @@ public class ControllerLogicAuto implements Runnable {
                                         overtakingFromLeftToRight(i,
                                                 listRightRoad,
                                                 numberInListRoads - 1,
-                                                -100,
+                                                -80,
                                                 -55,
-                                                -135.0,
+                                                -225.0,
                                                 -1100,
-                                                180,
+                                                0,
                                                 70,
                                                 -120);
                                     }
-
                                 }
                             }
                         }
@@ -264,7 +267,14 @@ public class ControllerLogicAuto implements Runnable {
                                            int distanceToTheNext) {
 
         long id;
-        if ((id = idToGoFor(listOfScannedAuto.get(index).getTranslateX(), listNeighborRoad, distanceToThePast, distanceToTheNext)) > -1) {
+
+        if (updateTranslateX > 0) {
+            id = idToGoFor(listOfScannedAuto.get(index).getTranslateX(), listNeighborRoad, distanceToThePast, distanceToTheNext);
+        } else {
+            id = idToGoForTwo(listOfScannedAuto.get(index).getTranslateX(), listNeighborRoad, distanceToThePast, distanceToTheNext);
+        }
+
+        if (id > -1) {
             //удаляем из транспорт из главной дороги
             Transport transport = listOfScannedAuto.get(index);
             listOfScannedAuto.remove(index);
@@ -327,6 +337,15 @@ public class ControllerLogicAuto implements Runnable {
     private long idToGoFor(double translateX, CopyOnWriteArrayList<Transport> list, int distanceToThePast, int distanceToTheNext) {
         for (int i = 1; i < list.size(); i++) {
             if ((list.get(i).getTranslateX() < (translateX + distanceToThePast)) && (list.get(i - 1).getTranslateX() > (translateX + distanceToTheNext))) {
+                return list.get(i).getIdNode();
+            }
+        }
+        return -1;
+    }
+
+    private long idToGoForTwo(double translateX, CopyOnWriteArrayList<Transport> list, int distanceToThePast, int distanceToTheNext) {
+        for (int i = 1; i < list.size(); i++) {
+            if ((list.get(i).getTranslateX() > (translateX + distanceToThePast)) && (list.get(i - 1).getTranslateX() < (translateX + distanceToTheNext))) {
                 return list.get(i).getIdNode();
             }
         }

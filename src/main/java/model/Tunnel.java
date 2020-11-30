@@ -1,11 +1,13 @@
 package main.java.model;
 
+/**
+ * Класс настройки дороги типа "Тунель" (Настройка фона, генерации скорости и времени)
+ */
 public class Tunnel implements BuilderRoad {
 
     private Background background;
     private Speed speed;
     private StreamTransport streamTransport;
-
 
     @Override
     public void setCountRoadBackground(int n) {

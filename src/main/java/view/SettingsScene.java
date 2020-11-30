@@ -1,12 +1,9 @@
 package main.java.view;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -18,6 +15,9 @@ import main.java.model.*;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+/**
+ * Класс представления, на котором моделируеммая система настраивается
+ */
 public class SettingsScene {
 
     private Stage stage;

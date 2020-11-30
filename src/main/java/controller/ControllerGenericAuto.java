@@ -3,10 +3,7 @@ package main.java.controller;
 import javafx.animation.Animation;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import main.java.model.BuilderRoad;
 import main.java.model.Transport;
 import main.java.view.GenericSceneTunnel;
@@ -14,6 +11,9 @@ import main.java.view.GenericSceneTunnel;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Класс генерирующий автомобиль на одной из полос
+ */
 public class ControllerGenericAuto implements Runnable {
 
     private GenericSceneTunnel genericSceneTunnel;
@@ -112,6 +112,7 @@ public class ControllerGenericAuto implements Runnable {
 
                 if (fromX == 1000) {
                     transport.getRectangle().setRotate(180);
+                    System.out.println(transport.getSpeed());
                 }
 
                 //добавление ее в список для отслеживания правил пдд
@@ -145,16 +146,16 @@ public class ControllerGenericAuto implements Runnable {
                     if (transport.getTranslateX() == 1000.0 || transport.getTranslateX() == -100.0) {
                         try {
                             list.remove(transport);
-                           // Platform.runLater(() -> pane.getChildren().remove(transport));
+                            //Platform.runLater(() -> pane.getChildren().remove(transport));
                         } catch (NullPointerException e) {
-                           // e.printStackTrace();
+                            // e.printStackTrace();
                         }
 
                     }
                     if (transport.getAnimation().getStatus() == Animation.Status.STOPPED && !(transport.getAnimation().getNode().getTranslateX() == 1000.0 || transport.getAnimation().getNode().getTranslateX() == -100.0)) {
-                        System.out.println("index before: " + index);
-                       // --index;
-                        System.out.println("index after: " + index);
+                        /*System.out.println("index before: " + index);
+                        //--index;
+                        System.out.println("index after: " + index);*/
                     }
                 });
             }

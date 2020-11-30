@@ -14,6 +14,9 @@ import main.java.model.BuilderRoad;
 import main.java.model.Highway;
 import main.java.model.Tunnel;
 
+/**
+ * Класс представления начальной сцены, с выбором типа дороги
+ */
 public class StartScene {
 
     private Stage stage;

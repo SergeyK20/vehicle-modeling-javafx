@@ -2,6 +2,9 @@ package main.java.model;
 
 import java.util.Random;
 
+/**
+ * Генерация значений для каждго из распределений
+ */
 public class GenerationValues {
 
     static public double generationNorm(double sigma, int mat) {
