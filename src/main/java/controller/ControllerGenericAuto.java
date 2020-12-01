@@ -75,6 +75,7 @@ public class ControllerGenericAuto implements Runnable {
                     }
                 }
 
+
                 //установка времени между которым появляется новая машина
                 times = Math.round(road.getStreamTransport().getTimes());
 
@@ -153,9 +154,9 @@ public class ControllerGenericAuto implements Runnable {
 
                     }
                     if (transport.getAnimation().getStatus() == Animation.Status.STOPPED && !(transport.getAnimation().getNode().getTranslateX() == 1000.0 || transport.getAnimation().getNode().getTranslateX() == -100.0)) {
-                        /*System.out.println("index before: " + index);
-                        //--index;
-                        System.out.println("index after: " + index);*/
+                    /*System.out.println("index before: " + index);
+                    //--index;
+                    System.out.println("index after: " + index);*/
                     }
                 });
             }

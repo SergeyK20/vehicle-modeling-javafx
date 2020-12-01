@@ -106,20 +106,23 @@ public class GenericSceneTunnel {
         }
 
         //три кнопки внизу
-        Button pause = new Button("Пауза");
-        pause.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
+        Button pause = new Button();
+        pause.setLayoutY(road.getCountRoadBackground().getHeightY() - 70);
         pause.setLayoutX(400);
-        pause.setMinSize(95, 25);
+        pause.setStyle("-fx-background-image: url(image/pause.jpg) ");
+        pause.setMinSize(50, 50);
 
-        Button proceed = new Button("Продолжить");
-        proceed.setLayoutX(500);
-        proceed.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
-        proceed.setMinSize(95, 25);
+        Button proceed = new Button();
+        proceed.setLayoutX(470);
+        proceed.setLayoutY(road.getCountRoadBackground().getHeightY() - 70);
+        proceed.setStyle("-fx-background-image: url(image/play.jpg) ");
+        proceed.setMinSize(50, 50);
 
-        Button stop = new Button("Остановить");
-        stop.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
-        stop.setLayoutX(600);
-        stop.setMinSize(95, 25);
+        Button stop = new Button();
+        stop.setLayoutY(road.getCountRoadBackground().getHeightY() - 70);
+        stop.setLayoutX(540);
+        stop.setStyle("-fx-background-image: url(image/stop.jpg) ");
+        stop.setMinSize(50, 50);
 
         Label label = new Label();
         label.setFont(new Font("Arial", 20));
@@ -196,14 +199,14 @@ public class GenericSceneTunnel {
                             i = 0;
                             Platform.runLater(() -> minutes.setText(String.valueOf(++m)));
                         }
-                        Platform.runLater(() -> seconds.setText(String.valueOf(mas[i])));
+                        Platform.runLater(() -> seconds.setText(String.valueOf(mas[i++])));
                     }
                     try {
                         TimeUnit.SECONDS.sleep(1);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    i++;
+
                 }
             }
         });
