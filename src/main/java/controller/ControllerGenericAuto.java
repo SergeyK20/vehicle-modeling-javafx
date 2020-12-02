@@ -125,40 +125,40 @@ public class ControllerGenericAuto implements Runnable {
                     Platform.runLater(() -> {
                         pane.getChildren().add(transport);
                     });
-                }
 
 
-                //время создания новой машины (нужна, если будет пауза)
-                startNewAuto = System.nanoTime();
+                    //время создания новой машины (нужна, если будет пауза)
+                    startNewAuto = System.nanoTime();
 
-                //выделяет каждую машину при нажатии
-                transport.setOnMousePressed(new ControllerObjectSelection(list, genericSceneTunnel));
+                    //выделяет каждую машину при нажатии
+                    transport.setOnMousePressed(new ControllerObjectSelection(list, genericSceneTunnel));
 
-                //устанаввливает временную задежку между созданием машин
-                try {
-                    TimeUnit.SECONDS.sleep(times);
-                } catch (InterruptedException e) {
-                    System.out.println(e.getMessage());
-                }
-
-
-                //дейсвие перед окончанием анимации машины
-                transport.getAnimation().setOnFinished(event -> {
-                    if (transport.getTranslateX() == 1000.0 || transport.getTranslateX() == -100.0) {
-                        try {
-                            list.remove(transport);
-                            //Platform.runLater(() -> pane.getChildren().remove(transport));
-                        } catch (NullPointerException e) {
-                            // e.printStackTrace();
-                        }
-
+                    //устанаввливает временную задежку между созданием машин
+                    try {
+                        TimeUnit.SECONDS.sleep(times);
+                    } catch (InterruptedException e) {
+                        System.out.println(e.getMessage());
                     }
-                    if (transport.getAnimation().getStatus() == Animation.Status.STOPPED && !(transport.getAnimation().getNode().getTranslateX() == 1000.0 || transport.getAnimation().getNode().getTranslateX() == -100.0)) {
+
+
+                    //дейсвие перед окончанием анимации машины
+                    transport.getAnimation().setOnFinished(event -> {
+                        if (transport.getTranslateX() == 1000.0 || transport.getTranslateX() == -100.0) {
+                            try {
+                                list.remove(transport);
+                                //Platform.runLater(() -> pane.getChildren().remove(transport));
+                            } catch (NullPointerException e) {
+                                // e.printStackTrace();
+                            }
+
+                        }
+                        if (transport.getAnimation().getStatus() == Animation.Status.STOPPED && !(transport.getAnimation().getNode().getTranslateX() == 1000.0 || transport.getAnimation().getNode().getTranslateX() == -100.0)) {
                     /*System.out.println("index before: " + index);
                     //--index;
                     System.out.println("index after: " + index);*/
-                    }
-                });
+                        }
+                    });
+                }
             }
         }
     }

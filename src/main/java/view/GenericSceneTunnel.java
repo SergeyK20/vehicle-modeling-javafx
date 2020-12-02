@@ -107,19 +107,19 @@ public class GenericSceneTunnel {
 
         //три кнопки внизу
         Button pause = new Button();
-        pause.setLayoutY(road.getCountRoadBackground().getHeightY() - 70);
+        pause.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
         pause.setLayoutX(400);
         pause.setStyle("-fx-background-image: url(image/pause.jpg) ");
         pause.setMinSize(50, 50);
 
         Button proceed = new Button();
         proceed.setLayoutX(470);
-        proceed.setLayoutY(road.getCountRoadBackground().getHeightY() - 70);
+        proceed.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
         proceed.setStyle("-fx-background-image: url(image/play.jpg) ");
         proceed.setMinSize(50, 50);
 
         Button stop = new Button();
-        stop.setLayoutY(road.getCountRoadBackground().getHeightY() - 70);
+        stop.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
         stop.setLayoutX(540);
         stop.setStyle("-fx-background-image: url(image/stop.jpg) ");
         stop.setMinSize(50, 50);

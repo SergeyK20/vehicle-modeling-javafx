@@ -141,7 +141,7 @@ public class SettingsScene {
                 try {
                     if (Integer.parseInt(textFieldForTime.getText()) >= 5 && Integer.parseInt(textFieldForTime.getText()) <= 50) {
                         road.setStreamTransport(Distribution.DETERMINISTIC.getNameDistribution(), Integer.parseInt(textFieldForTime.getText()));
-                        if (Integer.parseInt(textField2ForSpeed.getText()) >= 20 && Integer.parseInt(textFieldForTime.getText()) <= 80) {
+                        if (Integer.parseInt(textField2ForSpeed.getText()) >= 20 && Integer.parseInt(textField2ForSpeed.getText()) <= 80) {
                             road.setSpeed(Distribution.DETERMINISTIC.getNameDistribution(), Integer.parseInt(textField2ForSpeed.getText()));
                             if (road instanceof Tunnel) {
                                 road.setCountRoadBackground(1);
@@ -368,11 +368,15 @@ public class SettingsScene {
                                         spinnerNormSpeedDis.getValue());
                                 break;
                             case UNIFORM:
-                                road.setSpeed(
-                                        Distribution.UNIFORM.getNameDistribution(),
-                                        spinnerStartSpeed.getValue(),
-                                        spinnerEndSpeed.getValue()
-                                );
+                                if (spinnerStartSpeed.getValue() <= spinnerEndSpeed.getValue()) {
+                                    road.setSpeed(
+                                            Distribution.UNIFORM.getNameDistribution(),
+                                            spinnerStartSpeed.getValue(),
+                                            spinnerEndSpeed.getValue()
+                                    );
+                                } else {
+                                    throw new Exception();
+                                }
                                 break;
                             case EXPONENTIAL:
                                 road.setSpeed(
@@ -391,10 +395,14 @@ public class SettingsScene {
                                 );
                                 break;
                             case UNIFORM:
-                                road.setStreamTransport(Distribution.UNIFORM.getNameDistribution(),
-                                        spinnerStartTime.getValue(),
-                                        spinnerEndTime.getValue()
-                                );
+                                if (spinnerStartTime.getValue() <= spinnerEndTime.getValue()) {
+                                    road.setStreamTransport(Distribution.UNIFORM.getNameDistribution(),
+                                            spinnerStartTime.getValue(),
+                                            spinnerEndTime.getValue()
+                                    );
+                                } else {
+                                    throw new Exception();
+                                }
                                 break;
                             case EXPONENTIAL:
                                 road.setStreamTransport(Distribution.EXPONENTIAL.getNameDistribution(),
@@ -412,7 +420,7 @@ public class SettingsScene {
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("Warning");
                         alert.setHeaderText("Ошибка");
-                        alert.setContentText("Важные поля остались пустыми, пожалуйста заполните их");
+                        alert.setContentText("Неверно введенные данные, пожалуйста повторите ввод");
                         alert.showAndWait();
                     }
 

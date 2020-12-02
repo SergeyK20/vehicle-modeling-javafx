@@ -96,12 +96,7 @@ public class ControllerLogicAuto implements Runnable {
     private void logicalForSingleLineTrafficFromLeftToRight() {
         while (!isClose) {
             if (listOfScannedAuto != null) {
-                listOfScannedAuto.sort(new Comparator<Transport>() {
-                    @Override
-                    public int compare(Transport o1, Transport o2) {
-                        return (int) (o1.getIdNode() - o2.getIdNode());
-                    }
-                });
+                listOfScannedAuto.sort((o1, o2) -> (int) (o1.getIdNode() - o2.getIdNode()));
 
                 for (int i = 1; i < listOfScannedAuto.size(); i++) {
                     try {
@@ -115,7 +110,7 @@ public class ControllerLogicAuto implements Runnable {
                             }
                         }
                     } catch (Exception e) {
-                        //System.out.println(e.getMessage());
+                        System.out.println(e.getMessage());
                     }
                 }
             }
@@ -136,7 +131,7 @@ public class ControllerLogicAuto implements Runnable {
                             }
                         }
                     } catch (Exception e) {
-                        // Похоже там нууул
+                        System.out.println(e.getMessage());
                     }
                 }
             }
@@ -148,6 +143,7 @@ public class ControllerLogicAuto implements Runnable {
         if (beforeTransport.isFlagPause()) {
             transport.setFlagPause(true);
             transport.getAnimation().pause();
+            transport.setTextSpeed(0);
         } else {
             if (transport.isFlagPause()) {
                 transport.setFlagPause(false);
@@ -157,6 +153,7 @@ public class ControllerLogicAuto implements Runnable {
             transport.getAnimation().setRate(beforeTransport.getAnimation().getRate());
             transport.setTextSpeed(transport.getAnimation().getRate());
         }
+
     }
 
     private void logicalForDoubleLineTrafficFromLeftToRight() {
@@ -167,7 +164,7 @@ public class ControllerLogicAuto implements Runnable {
                     try {
                         if (listOfScannedAuto.get(i).getIdNode() != 0) {
                             if (listOfScannedAuto.get(i).getTranslateX() != 0.0) {
-                                if (listOfScannedAuto.get(i).getTranslateX() >= listOfScannedAuto.get(i - 1).getTranslateX() - 70
+                                if (listOfScannedAuto.get(i).getTranslateX() >= listOfScannedAuto.get(i - 1).getTranslateX() - 80
                                 ) {
                                     if (isLeftRoad) {
                                         //получаю список машин на левой дороге от меня
@@ -180,7 +177,7 @@ public class ControllerLogicAuto implements Runnable {
                                                 -45.0,
                                                 1100,
                                                 0,
-                                                -70,
+                                                -80,
                                                 120);
                                     }
                                     if (isRightRoad) {
@@ -193,14 +190,14 @@ public class ControllerLogicAuto implements Runnable {
                                                 45.0,
                                                 1100,
                                                 0,
-                                                -70,
+                                                -80,
                                                 120);
                                     }
                                 }
                             }
                         }
                     } catch (Exception e) {
-                        //System.out.println(e.getMessage());
+                        System.out.println(e.getMessage());
                     }
                 }
             }
@@ -248,7 +245,7 @@ public class ControllerLogicAuto implements Runnable {
                             }
                         }
                     } catch (Exception e) {
-                        //System.out.println(e.getMessage());
+                        System.out.println(e.getMessage());
                     }
                 }
             }

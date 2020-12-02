@@ -28,11 +28,12 @@ public class StartScene {
     }
 
     public void start() {
-        Button menuDirectory = new Button("Справка");
-        menuDirectory.setLayoutY(0);
-        menuDirectory.setLayoutX(0);
-        menuDirectory.setMinSize(100, 25);
-        menuDirectory.setOnAction(event -> {
+        Button infoInProgram = new Button();
+        infoInProgram.setLayoutY(0);
+        infoInProgram.setLayoutX(5);
+        infoInProgram.setMinSize(30, 30);
+        infoInProgram.setStyle("-fx-background-image: url(image/infoInProgram.jpg)");
+        infoInProgram.setOnAction(event -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Info");
             alert.setHeaderText("Информация о программе");
@@ -44,7 +45,7 @@ public class StartScene {
                             "                  в тоннеле и на автостраде\"\n" +
                             "\n" +
                             "Разработчики:\n" +
-                            "   Студенты группы 6404:\n" +
+                            "   Студенты группы 6404-090301D:\n" +
                             "   Кашкинов Сергей \n" +
                             "   Балаев Рафаил\n" +
                             "Руководитель:\n" +
@@ -52,6 +53,12 @@ public class StartScene {
                             "               Самарский университет 2020");
             alert.showAndWait();
         });
+
+        Button info = new Button();
+        info.setLayoutY(0);
+        info.setLayoutX(40);
+        info.setMinSize(30, 30);
+        info.setStyle("-fx-background-image: url(image/info.jpg)");
 
 
         Label labelHello = new Label("Добро пожаловать!");
@@ -81,7 +88,7 @@ public class StartScene {
 
         Scene sceneStart = new Scene(paneStart, 450, 300);
 
-        paneStart.getChildren().addAll(simulationSettings, menuDirectory, comboBox, labelHello);
+        paneStart.getChildren().addAll(simulationSettings, infoInProgram, info, comboBox, labelHello);
 
 
         simulationSettings.setOnMousePressed(event -> {
