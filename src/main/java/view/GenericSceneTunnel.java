@@ -17,6 +17,8 @@ import main.java.model.ControlOneRoad;
 import main.java.model.Transport;
 import main.java.model.Tunnel;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.*;
@@ -40,9 +42,9 @@ public class GenericSceneTunnel {
     //списки машин да на дорогах
     private List<ControlOneRoad> listControlRoadsFromLeftToRight;
     private List<ControlOneRoad> listControlRoadsFromRightToLeft;
+    private boolean flagPause;
+    private boolean flagClose;
 
-    boolean flagStopTimer;
-    boolean flagPauseTimer;
 
     public GenericSceneTunnel(Stage stage, BuilderRoad road, SettingsScene settingsScene) {
         this.stage = stage;
@@ -106,22 +108,16 @@ public class GenericSceneTunnel {
         }
 
         //три кнопки внизу
-        Button pause = new Button();
-        pause.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
-        pause.setLayoutX(400);
-        pause.setStyle("-fx-background-image: url(image/pause.jpg) ");
-        pause.setMinSize(50, 50);
-
-        Button proceed = new Button();
-        proceed.setLayoutX(470);
-        proceed.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
-        proceed.setStyle("-fx-background-image: url(image/play.jpg) ");
-        proceed.setMinSize(50, 50);
+        Button pauseAndProceed = new Button();
+        pauseAndProceed.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
+        pauseAndProceed.setLayoutX(345);
+        pauseAndProceed.setStyle("-fx-background-image: url(image/activePause.jpg) ");
+        pauseAndProceed.setMinSize(50, 50);
 
         Button stop = new Button();
         stop.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
-        stop.setLayoutX(540);
-        stop.setStyle("-fx-background-image: url(image/stop.jpg) ");
+        stop.setLayoutX(405);
+        stop.setStyle("-fx-background-image: url(image/activeStop.jpg) ");
         stop.setMinSize(50, 50);
 
         Label label = new Label();
@@ -130,12 +126,12 @@ public class GenericSceneTunnel {
         label.setLayoutX(250);
 
         if (transportChangeSpeed != null) {
-            label.setText(String.valueOf(transportChangeSpeed.getIdNode()) + " " + String.valueOf(transportChangeSpeed.getAnimation().getRate() * 2000.0));
+            label.setText(transportChangeSpeed.getIdNode() + " " + transportChangeSpeed.getAnimation().getRate() * 2000.0);
         } else {
             label.setText("");
         }
 
-        paneModelingAuto.getChildren().addAll(hBox, pause, stop, proceed, label);
+        paneModelingAuto.getChildren().addAll(hBox, pauseAndProceed, stop, /*proceed,*/ label);
 
 
         //сцена на которой все располагается
@@ -153,8 +149,7 @@ public class GenericSceneTunnel {
                     2 * road.getCountRoadBackground().getCountRoad(),
                     paneModelingAuto,
                     listFromY,
-                    pause,
-                    proceed,
+                    pauseAndProceed,
                     stop
             );
         } else {
@@ -162,8 +157,7 @@ public class GenericSceneTunnel {
                     2 * road.getCountRoadBackground().getCountRoad() * 2,
                     paneModelingAuto,
                     listFromY,
-                    pause,
-                    proceed,
+                    pauseAndProceed,
                     stop
             );
         }
@@ -174,39 +168,16 @@ public class GenericSceneTunnel {
     private void timer(HBox hBox) {
         hBox.setLayoutX(380);
         hBox.setLayoutY(5);
-        Label minutes = new Label();
-        Label seconds = new Label();
-        minutes.setFont(new Font("Aria", 20));
-        seconds.setFont(new Font("Aria", 20));
-        Label label = new Label(":");
-        label.setFont(new Font("Aria", 20));
-        int[] mas = new int[60];
-        hBox.getChildren().addAll(minutes, label, seconds);
-
-        for (int i = 0; i < mas.length; i++) {
-            mas[i] = i;
-        }
-
-        Thread th = new Thread(new Runnable() {
-            int i = 0;
-            int m = 0;
-
-            @Override
-            public void run() {
-                while (!flagStopTimer) {
-                    if (!flagPauseTimer) {
-                        if (mas[i] == 59) {
-                            i = 0;
-                            Platform.runLater(() -> minutes.setText(String.valueOf(++m)));
-                        }
-                        Platform.runLater(() -> seconds.setText(String.valueOf(mas[i++])));
-                    }
-                    try {
-                        TimeUnit.SECONDS.sleep(1);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
+        Label time = new Label();
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        hBox.getChildren().addAll(time);
+        Thread th = new Thread(() -> {
+            while(!flagClose) {
+                Platform.runLater(() -> time.setText(LocalTime.now().format(dateTimeFormatter)));
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -226,7 +197,7 @@ public class GenericSceneTunnel {
         }
     }
 
-    private void modelingAuto(int nThreads, Pane paneModelingAuto, List<Integer> listFromY, Button pause, Button proceed, Button stop) {
+    private void modelingAuto(int nThreads, Pane paneModelingAuto, List<Integer> listFromY, Button pauseAndProceed, /*Button proceed,*/ Button stop) {
         //сисок содержащий списки автомобилей на каждой дороге
         List<CopyOnWriteArrayList<Transport>> listRoads = new ArrayList<CopyOnWriteArrayList<Transport>>();
         //список сожержащий элементы(генерация , логика)
@@ -299,28 +270,8 @@ public class GenericSceneTunnel {
         listRoads.addAll(listAutoInRoadsFromRightToLeft);
 
         //событие при нажатие кнопки пауза
-        pause.setOnMousePressed(event -> {
-            if (!flagPauseTimer) {
-                //сообщаем контроллеру генерации, чтобы не создавал новые машины
-                for (int i = 0; i < (nThreads / 2); i++) {
-                    controlOneRoadList.get(i).getControllerGenericAuto().setPause(true);
-                    controlOneRoadList.get(i).getControllerGenericAuto().setNewTimes(true);
-                }
-                flagPauseTimer = true;
-                ControllerPause controllerPause = new ControllerPause(controlOneRoadList, listRoads);
-                pause.setOnAction(controllerPause);
-            }
-        });
-
-        proceed.setOnMousePressed(event -> {
-            if (flagPauseTimer) {
-                for (int i = 0; i < (nThreads / 2); i++) {
-                    controlOneRoadList.get(i).getControllerGenericAuto().setPause(false);
-                }
-                flagPauseTimer = false;
-                ControllerProceed controllerProceed = new ControllerProceed(listRoads);
-                proceed.setOnAction(controllerProceed);
-            }
+        pauseAndProceed.setOnMousePressed(event -> {
+            onActionPause(nThreads, pauseAndProceed, listRoads);
         });
 
         stop.setOnMousePressed(event -> {
@@ -328,12 +279,46 @@ public class GenericSceneTunnel {
                 controlOneRoadList.get(i).getControllerGenericAuto().setFlagClose(true);
                 controlOneRoadList.get(i).getControllerGenericAuto().setPause(true);
                 controlOneRoadList.get(i).getControllerLogicAuto().setClose(true);
-                flagStopTimer = true;
             }
+
+            flagClose = true;
 
             executorService.shutdown();
             settingsScene.start();
         });
+    }
+
+    private void onActionPause(int nThreads, Button pause, List<CopyOnWriteArrayList<Transport>> listRoads){
+        if (!flagPause) {
+            //сообщаем контроллеру генерации, чтобы не создавал новые машины
+            for (int i = 0; i < (nThreads / 2); i++) {
+                controlOneRoadList.get(i).getControllerGenericAuto().setPause(true);
+                controlOneRoadList.get(i).getControllerGenericAuto().setNewTimes(true);
+            }
+
+            pause.setStyle("-fx-background-image: url(image/activePlay.jpg)");
+            pause.setOnMousePressed(event -> onActionProceed(nThreads, pause, listRoads));
+
+            flagPause = true;
+            ControllerPause controllerPause = new ControllerPause(controlOneRoadList, listRoads);
+            pause.setOnAction(controllerPause);
+        }
+    }
+
+    private void onActionProceed(int nThreads, Button proceed, List<CopyOnWriteArrayList<Transport>> listRoads){
+        if (flagPause) {
+            for (int i = 0; i < (nThreads / 2); i++) {
+                controlOneRoadList.get(i).getControllerGenericAuto().setPause(false);
+            }
+
+            proceed.setStyle("-fx-background-image: url(image/activePause.jpg)");
+            proceed.setOnMousePressed(event -> onActionPause(nThreads, proceed, listRoads));
+
+            flagPause = false;
+
+            ControllerProceed controllerProceed = new ControllerProceed(listRoads);
+            proceed.setOnAction(controllerProceed);
+        }
     }
 
 }
