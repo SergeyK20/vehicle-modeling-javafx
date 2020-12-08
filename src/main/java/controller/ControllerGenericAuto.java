@@ -47,7 +47,7 @@ public class ControllerGenericAuto implements Runnable {
         newTimesSec = 0L;
         startNewAuto = 0L;
         isNewTimes = false;
-        isPause = false;
+        isPause = true;
         index = 0;
     }
 

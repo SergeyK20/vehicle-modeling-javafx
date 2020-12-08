@@ -54,6 +54,7 @@ public class GenericSceneTunnel {
         listAutoInRoadsFromRightToLeft = new ArrayList<>();
         listControlRoadsFromLeftToRight = new ArrayList<>();
         listControlRoadsFromRightToLeft = new ArrayList<>();
+        flagPause = true;
     }
 
     public void start() {
@@ -111,7 +112,7 @@ public class GenericSceneTunnel {
         Button pauseAndProceed = new Button();
         pauseAndProceed.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
         pauseAndProceed.setLayoutX(345);
-        pauseAndProceed.setStyle("-fx-background-image: url(image/activePause.jpg) ");
+        pauseAndProceed.setStyle("-fx-background-image: url(image/activePlay.jpg) ");
         pauseAndProceed.setMinSize(50, 50);
 
         Button stop = new Button();
@@ -162,7 +163,6 @@ public class GenericSceneTunnel {
             );
         }
 
-
     }
 
     private void timer(HBox hBox) {
@@ -197,9 +197,10 @@ public class GenericSceneTunnel {
         }
     }
 
-    private void modelingAuto(int nThreads, Pane paneModelingAuto, List<Integer> listFromY, Button pauseAndProceed, /*Button proceed,*/ Button stop) {
+    private void modelingAuto(int nThreads, Pane paneModelingAuto, List<Integer> listFromY, Button pauseAndProceed, Button stop) {
         //сисок содержащий списки автомобилей на каждой дороге
         List<CopyOnWriteArrayList<Transport>> listRoads = new ArrayList<CopyOnWriteArrayList<Transport>>();
+
         //список сожержащий элементы(генерация , логика)
         controlOneRoadList = new ArrayList<>();
         //создаем фиксированный пул потоков
@@ -269,10 +270,14 @@ public class GenericSceneTunnel {
         listRoads.addAll(listAutoInRoadsFromLeftToRight);
         listRoads.addAll(listAutoInRoadsFromRightToLeft);
 
+
+
         //событие при нажатие кнопки пауза
         pauseAndProceed.setOnMousePressed(event -> {
-            onActionPause(nThreads, pauseAndProceed, listRoads);
+            onActionProceed(nThreads, pauseAndProceed, listRoads);
         });
+
+
 
         stop.setOnMousePressed(event -> {
             for (int i = 0; i < (nThreads / 2); i++) {
@@ -286,14 +291,18 @@ public class GenericSceneTunnel {
             executorService.shutdown();
             settingsScene.start();
         });
+
+
     }
 
     private void onActionPause(int nThreads, Button pause, List<CopyOnWriteArrayList<Transport>> listRoads){
         if (!flagPause) {
-            //сообщаем контроллеру генерации, чтобы не создавал новые машины
-            for (int i = 0; i < (nThreads / 2); i++) {
-                controlOneRoadList.get(i).getControllerGenericAuto().setPause(true);
-                controlOneRoadList.get(i).getControllerGenericAuto().setNewTimes(true);
+            if(!listRoads.isEmpty()) {
+                //сообщаем контроллеру генерации, чтобы не создавал новые машины
+                for (int i = 0; i < (nThreads / 2); i++) {
+                    controlOneRoadList.get(i).getControllerGenericAuto().setPause(true);
+                    controlOneRoadList.get(i).getControllerGenericAuto().setNewTimes(true);
+                }
             }
 
             pause.setStyle("-fx-background-image: url(image/activePlay.jpg)");
