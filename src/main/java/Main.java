@@ -3,6 +3,7 @@ package main.java;
 import javafx.application.Application;
 
 import java.io.*;
+import java.util.Random;
 
 import javafx.stage.Stage;
 import main.java.view.StartScene;

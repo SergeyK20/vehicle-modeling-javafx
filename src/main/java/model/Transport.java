@@ -4,9 +4,11 @@ package main.java.model;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
@@ -31,22 +33,24 @@ public class Transport extends StackPane {
         mapImage = new HashMap<Integer, String>();
         mapImage.put(1, "/image/auto1.jpg");
         mapImage.put(2, "/image/auto2.png");
-        randomImage = (int) Math.round(new Random().nextDouble() + 1);
+        mapImage.put(3, "/image/auto3.png");
+        mapImage.put(4, "/image/auto4.png");
+        randomImage = (int) (1 + Math.round(Math.random() * 3));
     }
 
     public Transport(long idNode, TranslateTransition animation) {
         rectangle = new Rectangle();
         text = new Text();
+        text.setFill(Paint.valueOf("magenta"));
         ImagePattern ip = new ImagePattern(new Image(getClass().getResourceAsStream(mapImage.get(randomImage))));
         this.idNode = idNode;
         this.animation = animation;
-        this.setHeight(40);
+        this.setHeight(20);
         this.setWidth(50);
-        rectangle.setHeight(40);
+        rectangle.setHeight(20);
         rectangle.setWidth(50);
         rectangle.setFill(ip);
-        this.getChildren().addAll(rectangle, text);
-        this.setAlignment(Pos.TOP_CENTER);
+        this.getChildren().addAll( rectangle, text);
         animation.setNode(this);
         animation.setByX(10f);
         animation.setByY(10f);

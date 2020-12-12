@@ -169,6 +169,7 @@ public class GenericSceneTunnel {
         hBox.setLayoutX(380);
         hBox.setLayoutY(5);
         Label time = new Label();
+        time.setFont(new Font("Arial", 20));
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         hBox.getChildren().addAll(time);
         Thread th = new Thread(() -> {
