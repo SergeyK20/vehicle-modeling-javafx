@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -13,6 +15,12 @@ import main.java.controller.ControllerStartScene;
 import main.java.model.BuilderRoad;
 import main.java.model.Highway;
 import main.java.model.Tunnel;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * Класс представления начальной сцены, с выбором типа дороги
@@ -59,7 +67,19 @@ public class StartScene {
         info.setLayoutX(40);
         info.setMinSize(30, 30);
         info.setStyle("-fx-background-image: url(image/info.jpg)");
+        info.setOnAction(event -> {
+            Stage stageView = new Stage();
+            Pane pane = new Pane();
+            Scene scene = new Scene(pane, 800, 600);
+            WebView webView = new WebView();
+            WebEngine webEngine = webView.getEngine();
+            webEngine.load(Objects.requireNonNull(getClass().getClassLoader().getResource("info.html")).toString());
+            pane.getChildren().addAll(webView);
+            stageView.setScene(scene);
+            stageView.centerOnScreen();
+            stageView.showAndWait();
 
+        });
 
         Label labelHello = new Label("Добро пожаловать!");
         labelHello.setLayoutY(70);

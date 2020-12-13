@@ -4,21 +4,18 @@ package main.java.model;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Random;
 
-public class Transport extends StackPane {
+public class Transport extends VBox {
 
     private volatile long idNode;
     private volatile TranslateTransition animation;
@@ -41,7 +38,6 @@ public class Transport extends StackPane {
     public Transport(long idNode, TranslateTransition animation) {
         rectangle = new Rectangle();
         text = new Text();
-        text.setFill(Paint.valueOf("magenta"));
         ImagePattern ip = new ImagePattern(new Image(getClass().getResourceAsStream(mapImage.get(randomImage))));
         this.idNode = idNode;
         this.animation = animation;
@@ -50,7 +46,8 @@ public class Transport extends StackPane {
         rectangle.setHeight(20);
         rectangle.setWidth(50);
         rectangle.setFill(ip);
-        this.getChildren().addAll( rectangle, text);
+        this.getChildren().addAll(text, rectangle);
+        this.setAlignment(Pos.CENTER);
         animation.setNode(this);
         animation.setByX(10f);
         animation.setByY(10f);

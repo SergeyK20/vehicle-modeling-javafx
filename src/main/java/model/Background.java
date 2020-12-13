@@ -79,8 +79,8 @@ public class Background {
         if (road instanceof Highway) {
             switch (countRoad) {
                 case 1:
-                    listFromY.add(135);
-                    listFromY.add(200);
+                    listFromY.add(125);
+                    listFromY.add(195);
                     break;
                 case 2:
                     listFromY.add(95);
@@ -99,7 +99,7 @@ public class Background {
                 default:
             }
         } else {
-            listFromY.add(130);
+            listFromY.add(120);
         }
         return listFromY;
     }
