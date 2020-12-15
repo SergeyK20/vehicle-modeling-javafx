@@ -92,9 +92,9 @@ public class Background {
                     listFromY.add(35);
                     listFromY.add(120);
                     listFromY.add(210);
-                    listFromY.add(295);
-                    listFromY.add(385);
-                    listFromY.add(475);
+                    listFromY.add(300);
+                    listFromY.add(390);
+                    listFromY.add(480);
                     break;
                 default:
             }

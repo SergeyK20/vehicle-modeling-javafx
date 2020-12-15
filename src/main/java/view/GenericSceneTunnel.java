@@ -110,16 +110,16 @@ public class GenericSceneTunnel {
 
         //три кнопки внизу
         Button pauseAndProceed = new Button();
-        pauseAndProceed.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
+        pauseAndProceed.setLayoutY(road.getCountRoadBackground().getHeightY() - 25);
         pauseAndProceed.setLayoutX(345);
         pauseAndProceed.setStyle("-fx-background-image: url(image/activePlay.jpg) ");
-        pauseAndProceed.setMinSize(50, 50);
+        pauseAndProceed.setMinSize(25, 25);
 
         Button stop = new Button();
-        stop.setLayoutY(road.getCountRoadBackground().getHeightY() - 50);
+        stop.setLayoutY(road.getCountRoadBackground().getHeightY() - 25);
         stop.setLayoutX(405);
         stop.setStyle("-fx-background-image: url(image/activeStop.jpg) ");
-        stop.setMinSize(50, 50);
+        stop.setMinSize(25, 25);
 
         Label label = new Label();
         label.setFont(new Font("Arial", 20));
@@ -166,7 +166,7 @@ public class GenericSceneTunnel {
     }
 
     private void timer(HBox hBox) {
-        hBox.setLayoutX(380);
+        hBox.setLayoutX(345);
         hBox.setLayoutY(5);
         Label time = new Label();
         time.setFont(new Font("Arial", 20));
